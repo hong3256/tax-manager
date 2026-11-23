@@ -1,0 +1,1272 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1f4e79">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="강사세금">
+<title>2026년 세금신고 — 강사 지급·원천세 관리</title>
+<link rel="manifest" href="./manifest.json">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" href="./favicon.ico" sizes="any">
+<style>
+:root{
+  --navy:#1f4e79; --navy2:#2e6ba8; --ink:#12253a; --muted:#5b6b7c;
+  --line:#c3cfdd; --line2:#e3e9f1; --bg:#eef2f7; --card:#fff;
+  --input:#fbfdff; --focus:#eaf3ff; --yellow:#fff8d6; --grn:#e8f5e9; --red:#b3261e;
+}
+*{box-sizing:border-box; -webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:"Malgun Gothic","Apple SD Gothic Neo","Noto Sans KR","Noto Sans CJK KR","맑은 고딕",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  font-size:14px; line-height:1.45; -webkit-text-size-adjust:100%;
+}
+button{font-family:inherit}
+/* ---------- 상단 ---------- */
+.stick{position:sticky; top:0; z-index:30; background:#fff; border-bottom:1px solid var(--line); box-shadow:0 1px 6px rgba(18,37,58,.06)}
+.topbar{max-width:1180px; margin:0 auto; display:flex; align-items:center; gap:8px; padding:8px 12px; flex-wrap:wrap}
+.brand{display:flex; align-items:center; gap:9px; min-width:0}
+.logo{width:30px; height:30px; flex:none}
+.bt{font-weight:800; font-size:16px; color:var(--navy); letter-spacing:-.3px; white-space:nowrap}
+.bs{font-size:11.5px; color:var(--muted); font-weight:600; white-space:nowrap}
+.tools{margin-left:auto; display:flex; align-items:center; gap:6px; flex-wrap:wrap}
+.btn{
+  border:1px solid var(--line); background:#f7f9fc; color:var(--ink); border-radius:9px;
+  padding:7px 11px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;
+  display:inline-flex; align-items:center; gap:5px; min-height:36px;
+}
+.btn:hover{background:#eef3fa}
+.btn:active{background:#e3ebf5}
+.btn.primary{background:var(--navy); border-color:var(--navy); color:#fff}
+.btn.primary:hover{background:var(--navy2)}
+.btn.ghost{background:transparent}
+.btn.sm{padding:4px 9px; font-size:12px; min-height:30px}
+.btn:disabled{opacity:.5; cursor:not-allowed}
+.ibtn{border:1px solid var(--line); background:#f7f9fc; border-radius:9px; padding:6px 8px; font-size:15px; line-height:1; cursor:pointer; min-width:36px; min-height:34px}
+/* 탭 */
+.tabs{max-width:1180px; margin:0 auto; padding:0 8px 8px; display:flex; gap:4px; overflow-x:auto; scrollbar-width:thin}
+.tab{
+  border:1px solid var(--line); background:#f4f7fb; color:#31465c; border-radius:9px 9px 0 0;
+  padding:7px 13px; font-size:13.5px; font-weight:800; cursor:pointer; white-space:nowrap; position:relative;
+}
+.tab.on{background:#fff; border-bottom-color:#fff; color:var(--navy); box-shadow:0 -2px 0 var(--navy) inset}
+.tab .dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:#7cb342; margin-left:5px; vertical-align:1px}
+.tab.sum{background:#eef4ff}
+/* ---------- 본문 ---------- */
+main{max-width:1180px; margin:0 auto; padding:14px 12px 60px}
+.card{background:var(--card); border:1px solid var(--line); border-radius:12px; margin:0 0 14px; overflow:hidden; box-shadow:0 1px 3px rgba(18,37,58,.05)}
+.card-h{display:flex; align-items:center; gap:10px; padding:10px 13px; border-bottom:1px solid var(--line2); background:#f8fafd; flex-wrap:wrap}
+.card-h h2{margin:0; font-size:15px; color:var(--navy); letter-spacing:-.2px}
+.card-h .sub{font-size:12px; color:var(--muted); font-weight:700}
+.card-h .ch-act{margin-left:auto; display:flex; gap:6px; align-items:center}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse; width:100%}
+.tbl th,.tbl td{border-bottom:1px solid var(--line2); padding:0; vertical-align:middle}
+.tbl th{
+  background:#f2f6fb; font-size:12px; color:#3b5570; font-weight:800; padding:7px 6px;
+  border-right:1px solid var(--line2); white-space:nowrap; text-align:center; position:relative;
+}
+.tbl td{border-right:1px solid var(--line2)}
+.tbl td.num,.tbl th.num{text-align:right}
+.tbl tbody tr:hover td{background:#fcfdff}
+.tbl tbody tr.odd td{background:#fafcff}
+.calc{font-variant-numeric:tabular-nums; font-weight:700; color:#2b3f57; padding:6px 8px !important; white-space:nowrap}
+.calc.strong{color:var(--navy)}
+.calc.muted{color:#93a2b4; font-weight:600}
+.cell{
+  width:100%; border:0; background:transparent; padding:6px 7px; font:inherit; font-size:13px;
+  color:inherit; border-radius:0; outline:none; min-height:32px;
+}
+input.cell:hover{background:#f5f9ff}
+input.cell:focus{background:var(--focus); box-shadow:inset 0 0 0 2px var(--navy2)}
+.cell.num-in{text-align:right; font-variant-numeric:tabular-nums}
+select.cell{appearance:none; background:#fff; border:1px solid var(--line2); border-radius:6px; padding:3px 4px; font-size:12px; margin:3px 4px; width:calc(100% - 8px); cursor:pointer}
+select.cell:focus{outline:2px solid var(--navy2)}
+.c-name{width:96px}
+.c-kind{width:84px}
+.c-kind select{font-size:11.5px; padding:3px 2px}
+.c-note{width:150px}
+.c-del{width:34px}
+.c-it{min-width:250px}
+.x{
+  border:1px solid #e3c2be; background:#fff5f4; color:var(--red); border-radius:7px; width:24px; height:24px;
+  line-height:1; font-size:14px; font-weight:800; cursor:pointer; margin:3px auto; display:block;
+}
+.x:hover{background:#ffebe9}
+.tbl tfoot td{background:#f4f8fd; font-weight:800; border-top:2px solid var(--line); padding:7px 8px; white-space:nowrap}
+.tbl tfoot td.lbl{color:var(--navy)}
+.tbl tfoot tr.total td{background:#e9f1fa; border-top:2px solid var(--navy)}
+.det-tools{display:flex; gap:8px; align-items:center; padding:9px 12px; border-bottom:1px solid var(--line2); flex-wrap:wrap; background:#fbfcfe}
+.det-tools input[type=search]{
+  flex:1 1 200px; min-width:140px; border:1px solid var(--line); border-radius:9px; padding:7px 11px; font:inherit; font-size:13px; background:#fff;
+}
+.det-tools input[type=search]:focus{outline:2px solid var(--navy2); background:var(--focus)}
+.hint{font-size:12px; color:var(--muted); font-weight:700}
+.spacer{flex:1}
+/* 요약 */
+.mini{display:flex; gap:14px; flex-wrap:wrap; padding:9px 13px; background:#f8fbff; border-bottom:1px solid var(--line2)}
+.mini div{font-size:12px; color:var(--muted); font-weight:700}
+.mini b{color:var(--navy); font-size:13.5px; margin-left:4px; font-variant-numeric:tabular-nums}
+/* 빈 상태 */
+.empty{padding:38px 20px; text-align:center; color:var(--muted)}
+.empty h3{color:var(--navy); margin:0 0 8px; font-size:17px}
+.empty p{margin:6px 0 0; font-size:13.5px}
+.empty .act{margin-top:18px; display:flex; gap:8px; justify-content:center; flex-wrap:wrap}
+/* 연간 */
+.chart{padding:12px 14px}
+.bar{display:flex; align-items:center; gap:8px; margin:3px 0; font-size:12px}
+.bar .m{width:44px; color:var(--muted); font-weight:800}
+.bar .t{flex:1; background:#eef3f9; border-radius:5px; height:16px; overflow:hidden}
+.bar .t i{display:block; height:100%; background:linear-gradient(90deg,var(--navy2),var(--navy)); border-radius:5px}
+.bar .v{width:118px; text-align:right; font-variant-numeric:tabular-nums; font-weight:700; color:#2b3f57}
+/* 모달 */
+.mask{position:fixed; inset:0; background:rgba(12,25,40,.45); z-index:80; display:none; padding:16px; overflow:auto}
+.mask.on{display:flex; align-items:center; justify-content:center}
+.modal{background:#fff; border-radius:14px; max-width:520px; width:100%; box-shadow:0 12px 40px rgba(0,0,0,.28); overflow:hidden}
+.modal h3{margin:0; padding:14px 16px; font-size:15.5px; color:var(--navy); border-bottom:1px solid var(--line2); background:#f7fafd}
+.modal .bd{padding:14px 16px; font-size:13.5px}
+.modal .bd p{margin:0 0 10px}
+.modal .bd label{display:block; font-size:12px; font-weight:800; color:#3b5570; margin:10px 0 4px}
+.modal .bd input[type=text],.modal .bd input[type=password]{
+  width:100%; border:1px solid var(--line); border-radius:9px; padding:9px 11px; font:inherit; font-size:13.5px; background:var(--input);
+}
+.modal .bd input:focus{outline:2px solid var(--navy2); background:var(--focus)}
+.modal .ft{padding:12px 16px; border-top:1px solid var(--line2); display:flex; gap:8px; justify-content:flex-end; background:#fbfcfe; flex-wrap:wrap}
+.note{font-size:12px; color:var(--muted); line-height:1.55; background:#f6f9fd; border:1px solid var(--line2); border-radius:9px; padding:9px 11px; margin-top:12px}
+.note b{color:#31465c}
+.st{font-size:12.5px; font-weight:800; margin-top:10px}
+.st.ok{color:#1b5e20}
+.st.err{color:var(--red)}
+/* 토스트 */
+#toast{
+  position:fixed; left:50%; bottom:22px; transform:translate(-50%, 20px); background:#152b41; color:#fff;
+  padding:10px 14px; border-radius:11px; font-size:13px; font-weight:700; box-shadow:0 8px 24px rgba(0,0,0,.28);
+  opacity:0; pointer-events:none; transition:.18s; z-index:120; display:flex; gap:12px; align-items:center; max-width:calc(100vw - 24px);
+}
+#toast.on{opacity:1; transform:translate(-50%,0); pointer-events:auto}
+#toast button{background:#ffd54a; border:0; border-radius:7px; padding:5px 9px; font-weight:800; font-size:12px; cursor:pointer; color:#152b41}
+/* 인쇄 */
+@media print{
+  @page{size:A4 landscape; margin:9mm}
+  body{background:#fff; font-size:11px}
+  .stick,.tools,.tabs,.det-tools,.card-h .ch-act,.x,.c-del,.hint,.spacer,#toast,.mask{display:none !important}
+  main{max-width:none; padding:0}
+  .card{border:0; box-shadow:none; margin:0 0 6mm; break-inside:auto}
+  .card-h{background:#fff; border-bottom:1px solid #999; padding:0 0 4px}
+  .tbl th{background:#eee !important; -webkit-print-color-adjust:exact; print-color-adjust:exact}
+  .tbl td,.tbl th{border:1px solid #bbb !important; font-size:10.5px; padding:2px 4px !important}
+  .cell{border:0 !important; padding:2px 4px !important; font-size:10.5px}
+  select.cell{border:0 !important; background:#fff !important; appearance:none; margin:0; width:100%; padding:2px}
+  .print-only{display:block !important}
+  tr,td,th{page-break-inside:avoid}
+  .scroll{overflow:visible !important}
+}
+.print-only{display:none}
+.only-mobile{display:none; font-size:11.5px; color:#7b8ca0; font-weight:700}
+@media (max-width:720px){
+  .bt{font-size:14.5px}
+  .bs{display:none}
+  .btn{padding:6px 9px; font-size:12.5px}
+  main{padding:10px 8px 50px}
+  .tab{padding:6px 10px; font-size:12.5px}
+  .c-it{min-width:180px}
+  .tbl.sum{min-width:600px}
+  .tbl.det{min-width:900px}
+  .scroll{-webkit-overflow-scrolling:touch}
+  .tools{gap:4px}
+  .tbl th{padding:6px 3px; font-size:11px}
+  .cell{padding:6px 4px; font-size:12px}
+  .c-name{width:78px}
+  .c-kind{width:62px}
+  .c-note{width:96px}
+  .only-mobile{display:inline}
+}
+@media (prefers-reduced-motion: reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+<header class="stick">
+  <div class="topbar">
+    <div class="brand">
+      <img class="logo" src="./icon-192.png" alt="">
+      <div>
+        <div class="bt">2026년 세금신고</div>
+        <div class="bs" id="statusLine">기기에 자동 저장됩니다</div>
+      </div>
+    </div>
+    <div class="tools">
+      <button class="btn primary" data-act="import">📥 엑셀 불러오기</button>
+      <button class="btn" data-act="export">💾 엑셀(.xlsx) 저장</button>
+      <button class="btn" data-act="print">🖨️ 인쇄·PDF</button>
+      <button class="btn" data-act="sync">🔗 시트 연결</button>
+      <button class="btn ghost" data-act="reset" title="화면의 데이터를 모두 지웁니다">↺</button>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs"></nav>
+</header>
+
+<main id="app"></main>
+<div class="print-only" style="padding:0 0 6mm">
+  <div style="font-size:15px;font-weight:800">2026년 세금신고</div>
+  <div style="font-size:11px;color:#555" id="printSub"></div>
+</div>
+
+<input type="file" id="file" accept=".xlsx,.xls" aria-label="엑셀 파일 선택" style="position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0">
+
+<div class="mask" id="mask"><div class="modal" id="modal"></div></div>
+<div id="toast"></div>
+
+<script src="./xlsx.full.min.js"></script>
+<script>
+"use strict";
+/* =====================================================================
+   2026년 세금신고 — 강사 지급·원천세 관리 (단일 파일 웹앱)
+   · 엑셀(.xlsx) 1월~12월 탭 불러오기 / 수정 / 엑셀로 저장
+   · 소득세(3%·10원 절사)·주민세(10%)·방과후강사 신고금액 자동 계산
+   · 기기(localStorage)에 자동 저장, 인쇄·PDF, (선택) 구글 시트 연동
+   · 실제 개인정보는 코드에 넣지 않습니다. 데이터는 이 브라우저 안에만 있습니다.
+   ===================================================================== */
+const MONTH_KEYS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
+const STORE_KEY = 'mancheon.tax.v1';
+const SYNC_KEY  = 'mancheon.tax.sync.v1';
+const NUMFMT = '_-* #,##0_-;\\-* #,##0_-;_-* " - "_-;_-@_-';
+const KINDS = ['근로','일용','퇴직'];
+const TAX_RATES = [{v:0.03,l:'3%'},{v:0.08,l:'8%'},{v:0,l:'면세'}];
+const AFTER_MODES = [{v:'14.9',l:'14.9%'},{v:'19.3',l:'19.3%'},{v:'net',l:'지급액-세액'},{v:'none',l:'미적용'}];
+
+/* ---------------- 작은 도구 ---------------- */
+const $ = (s, r) => (r||document).querySelector(s);
+const $$ = (s, r) => Array.from((r||document).querySelectorAll(s));
+const esc = (s) => String(s==null?'':s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+let _uid = 0;
+const uid = () => 'r' + (Date.now().toString(36)) + (++_uid).toString(36);
+const num = (v) => {
+  if (v == null) return 0;
+  if (typeof v === 'number') return isFinite(v) ? v : 0;
+  const t = String(v).replace(/[,\s₩원]/g, '').replace(/[−–—]/g, '-');
+  if (t === '' || t === '-') return 0;
+  const x = Number(t);
+  return isFinite(x) ? x : 0;
+};
+const fmt = (v) => {
+  if (v == null || v === '') return '';
+  const x = Number(v);
+  if (!isFinite(x)) return '';
+  return x.toLocaleString('ko-KR', {maximumFractionDigits: 0});
+};
+const fmt2 = (v) => {          /* 방과후 신고금액: 소수점이 생기면 살려서 표시 */
+  if (v == null || v === '') return '';
+  const x = Number(v);
+  if (!isFinite(x)) return '';
+  const r = Math.round(x * 100) / 100;
+  return (Number.isInteger(r) ? r : r).toLocaleString('ko-KR', {maximumFractionDigits: 2});
+};
+const rdown = (v, unit) => { const u = unit || 10; const x = Number(v) || 0; return Math.sign(x) * Math.floor(Math.abs(x) / u) * u; };
+
+/* ---------------- 계산 ---------------- */
+function incomeTax(r){
+  if (r.taxRate == null) return num(r.taxManual);
+  return rdown(num(r.amount) * Number(r.taxRate));
+}
+function residentTax(r){
+  if (r.resManual != null) return num(r.resManual);
+  return rdown(incomeTax(r) * 0.10);
+}
+function rowTotal(r){ return incomeTax(r) + residentTax(r); }
+function afterAmount(r){
+  const a = num(r.amount);
+  if (r.after === 'none') return null;
+  if (r.after === 'net') return a - rowTotal(r);
+  const rate = r.after === '19.3' ? 0.193 : 0.149;
+  return a - a * rate;
+}
+function afterLabel(m){
+  const map = {'14.9':'14.9%','19.3':'19.3%','net':'지급액-세액','none':'미적용'};
+  return map[m] || m || '';
+}
+
+/* ---------------- 상태 ---------------- */
+function blankMonth(){
+  return {defaultAfter: '14.9', summary: [], rows: []};
+}
+function blankState(){
+  const s = {v: 2, title: '2026년 세금신고', savedAt: '', months: {}};
+  MONTH_KEYS.forEach(k => s.months[k] = blankMonth());
+  return s;
+}
+let state = blankState();
+let currentTab = '1월';
+let search = '';
+let lastDeleted = null;   /* {kind:'detail'|'summary', key, index, row} */
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const s = JSON.parse(raw);
+    if (!s || !s.months) return;
+    const base = blankState();
+    MONTH_KEYS.forEach(k => {
+      const m = s.months[k];
+      if (!m) return;
+      base.months[k] = {
+        defaultAfter: m.defaultAfter || '14.9',
+        summary: Array.isArray(m.summary) ? m.summary.map(x => ({
+          id: x.id || uid(), label: x.label || '', kind: KINDS.includes(x.kind) ? x.kind : '근로',
+          count: num(x.count), salary: num(x.salary), tax: num(x.tax), res: num(x.res), note: x.note || ''
+        })) : [],
+        rows: Array.isArray(m.rows) ? m.rows.map(normalizeRow) : []
+      };
+    });
+    base.savedAt = s.savedAt || '';
+    base.title = s.title || base.title;
+    state = base;
+  }catch(e){ console.warn('저장된 자료를 읽지 못했습니다', e); }
+}
+function normalizeRow(x){
+  const r = {
+    id: x.id || uid(),
+    date: x.date == null ? '' : String(x.date),
+    name: x.name == null ? '' : String(x.name),
+    item: x.item == null ? '' : String(x.item),
+    amount: num(x.amount),
+    taxRate: (x.taxRate === 0 || x.taxRate) ? Number(x.taxRate) : null,
+    taxManual: x.taxManual == null ? null : num(x.taxManual),
+    resManual: x.resManual == null ? null : num(x.resManual),
+    after: ['14.9','19.3','net','none'].includes(x.after) ? x.after : 'none',
+    note: x.note == null ? '' : String(x.note)
+  };
+  return r;
+}
+let saveTimer = null;
+function saveState(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => {
+    try{
+      state.savedAt = new Date().toISOString();
+      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      renderStatus();
+    }catch(e){
+      console.warn(e);
+      showToast('저장 공간이 부족해 기기에 저장하지 못했습니다. 엑셀로 저장해 두세요.');
+    }
+  }, 250);
+}
+function renderStatus(){
+  const t = state.savedAt ? new Date(state.savedAt) : null;
+  const when = t ? t.toLocaleString('ko-KR', {month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit'}) : '—';
+  const total = MONTH_KEYS.reduce((a,k) => a + state.months[k].rows.length, 0);
+  $('#statusLine').textContent = `기기에 자동 저장 · ${when} · 전체 ${fmt(total)}건`;
+}
+
+/* ---------------- 집계 ---------------- */
+function summaryTotals(m){
+  const g = {};
+  KINDS.forEach(k => g[k] = {count:0, salary:0, tax:0, total:0, rows:0});
+  m.summary.forEach(s => {
+    const k = g[s.kind] || g['근로'];
+    k.count += num(s.count); k.salary += num(s.salary); k.tax += num(s.tax);
+    k.total += num(s.tax) + num(s.res); k.rows++;
+  });
+  return g;
+}
+function detailTotals(rows){
+  const t = {amount:0, tax:0, res:0, total:0, after:0, n:0};
+  rows.forEach(r => {
+    t.amount += num(r.amount); t.tax += incomeTax(r); t.res += residentTax(r);
+    t.total += rowTotal(r);
+    const a = afterAmount(r); if (a != null) t.after += a;
+    t.n++;
+  });
+  return t;
+}
+function monthHasData(m){ return m.rows.length > 0 || m.summary.length > 0; }
+function anyData(){ return MONTH_KEYS.some(k => monthHasData(state.months[k])); }
+
+/* ---------------- 화면 ---------------- */
+function render(){
+  renderTabs();
+  renderStatus();
+  const ps = $('#printSub');
+  if (ps) ps.textContent = (currentTab === '연간요약' ? '연간요약' : currentTab) + ' · 인쇄 ' + new Date().toLocaleDateString('ko-KR');
+  if (currentTab === '연간요약') renderAnnual();
+  else renderMonth(currentTab);
+}
+function renderTabs(){
+  const el = $('#tabs');
+  const parts = MONTH_KEYS.map(k => {
+    const m = state.months[k];
+    const on = k === currentTab ? ' on' : '';
+    const dot = m.rows.length ? '<span class="dot"></span>' : '';
+    return `<button class="tab${on}" data-act="tab" data-tab="${k}">${k}${dot}</button>`;
+  });
+  const onSum = currentTab === '연간요약' ? ' on' : '';
+  parts.push(`<button class="tab sum${onSum}" data-act="tab" data-tab="연간요약">📊 연간요약</button>`);
+  el.innerHTML = parts.join('');
+}
+
+function renderMonth(key){
+  const m = state.months[key];
+  const app = $('#app');
+  if (!monthHasData(m) && !anyData()){
+    app.innerHTML = emptyHtml();
+    return;
+  }
+  const st = summaryTotals(m);
+  const groups = KINDS.filter(k => m.summary.some(s => s.kind === k));
+
+  /* --- 요약 표 본문 --- */
+  const sumRows = m.summary.map((s, i) => {
+    const tot = num(s.tax) + num(s.res);
+    return `<tr data-sid="${s.id}" class="${i%2?'odd':''}">
+      <td><input class="cell" data-f="label" data-sid="${s.id}" value="${esc(s.label)}" placeholder="17일"></td>
+      <td><select class="cell" data-f="kind" data-sid="${s.id}">${KINDS.map(k => `<option value="${k}"${s.kind===k?' selected':''}>${k}</option>`).join('')}</select></td>
+      <td class="num"><input class="cell num-in" data-f="count" data-sid="${s.id}" inputmode="numeric" value="${s.count?esc(s.count):''}"></td>
+      <td class="num"><input class="cell num-in" data-f="salary" data-sid="${s.id}" inputmode="numeric" value="${s.salary?esc(fmt(s.salary)):''}"></td>
+      <td class="num"><input class="cell num-in" data-f="tax" data-sid="${s.id}" inputmode="numeric" value="${s.tax?esc(fmt(s.tax)):''}"></td>
+      <td class="num"><input class="cell num-in" data-f="res" data-sid="${s.id}" inputmode="numeric" value="${s.res?esc(fmt(s.res)):''}"></td>
+      <td class="num calc strong" data-calc="sum${s.id}">${fmt(tot)}</td>
+      <td><input class="cell" data-f="note" data-sid="${s.id}" value="${esc(s.note)}" placeholder=""></td>
+      <td class="c-del"><button class="x" data-act="del-sum" data-sid="${s.id}" title="이 줄 삭제">−</button></td>
+    </tr>`;
+  }).join('');
+
+  const footRows = groups.map(k => `<tr data-foot="${k}"><td class="lbl">${k} 소계</td><td class="num" data-sk="count">${st[k].count?fmt(st[k].count):''}</td><td class="num" data-sk="salary">${fmt(st[k].salary)}</td><td class="num" data-sk="tax">${fmt(st[k].tax)}</td><td></td><td class="num" data-sk="total">${fmt(st[k].total)}</td><td colspan="3"></td></tr>`).join('');
+  const grand = KINDS.reduce((a,k) => ({count:a.count+st[k].count, salary:a.salary+st[k].salary, tax:a.tax+st[k].tax, total:a.total+st[k].total}), {count:0,salary:0,tax:0,total:0});
+
+  /* --- 상세 표 --- */
+  const visible = visibleRows(m);
+  const dt = detailTotals(visible);
+  const detRows = visible.map((r, i) => detailRowHtml(r, i)).join('');
+
+  app.innerHTML = `
+  <div class="mini">
+    <div>근로 급여<b>${fmt(st['근로'].salary)}</b></div>
+    <div>일용 급여<b>${fmt(st['일용'].salary)}</b></div>
+    <div>원천세 합계<b>${fmt(grand.total)}</b></div>
+    <div>강사 지급액<b>${fmt(detailTotals(m.rows).amount)}</b></div>
+  </div>
+  <article class="card" id="card-sum">
+    <header class="card-h">
+      <h2>${key} 근로소득 요약</h2>
+      <span class="sub">${m.summary.length}줄</span>
+      <div class="ch-act">
+        <button class="btn sm" data-act="add-sum">＋ 줄 추가</button>
+      </div>
+    </header>
+    <div class="scroll">
+      <table class="tbl sum">
+        <thead><tr>
+          <th class="c-name">지급일</th><th class="c-kind">구분</th><th class="num">명수</th>
+          <th class="num">급여</th><th class="num">소득세</th><th class="num">주민세</th>
+          <th class="num">합계</th><th class="c-note">비고</th><th class="c-del"></th>
+        </tr></thead>
+        <tbody>${sumRows || `<tr><td colspan="9" style="padding:18px;text-align:center;color:#8496a9">요약 줄이 없습니다. <b>＋ 줄 추가</b>를 눌러 주세요.</td></tr>`}</tbody>
+        ${m.summary.length ? `<tfoot>
+          ${footRows}
+          ${groups.length > 1 ? `<tr class="total" data-foot="총계"><td class="lbl">총계</td><td class="num" data-sk="count">${fmt(grand.count)}</td><td class="num" data-sk="salary">${fmt(grand.salary)}</td><td class="num" data-sk="tax">${fmt(grand.tax)}</td><td></td><td class="num" data-sk="total">${fmt(grand.total)}</td><td colspan="3"></td></tr>` : ''}
+        </tfoot>` : ''}
+      </table>
+    </div>
+  </article>
+
+  <article class="card" id="card-det">
+    <header class="card-h">
+      <h2>${key} 강사 지급 내역</h2>
+      <span class="sub" id="detCount">${fmt(dt.n)}건</span>
+      <div class="ch-act">
+        <label class="hint" for="defAfter">새 줄 신고율</label>
+        <select class="cell" id="defAfter" data-act="def-after" style="width:120px;margin:0">
+          ${AFTER_MODES.map(o => `<option value="${o.v}"${m.defaultAfter===o.v?' selected':''}>${o.l}</option>`).join('')}
+        </select>
+        <button class="btn sm" data-act="add-row">＋ 행 추가</button>
+      </div>
+    </header>
+    <div class="det-tools">
+      <input type="search" id="q" placeholder="이름·건명 검색" value="${esc(search)}" autocomplete="off">
+      <span class="hint" id="qCount">${search ? `검색 ${fmt(dt.n)}건 / 전체 ${fmt(m.rows.length)}건` : `전체 ${fmt(m.rows.length)}건`}</span>
+      <span class="spacer"></span>
+      <span class="hint">소득세 3%·주민세 10% 10원 절사 자동</span>
+      <span class="only-mobile">표는 옆으로 밀어 보세요 →</span>
+    </div>
+    <div class="scroll">
+      <table class="tbl det">
+        <thead><tr>
+          <th class="c-name">지급일자</th><th style="width:82px">이름</th><th class="c-it">건명</th>
+          <th class="num" style="width:112px">지급액</th><th style="width:92px">소득세율</th>
+          <th class="num" style="width:96px">소득세</th><th class="num" style="width:88px">주민세</th>
+          <th class="num" style="width:96px">합계</th><th style="width:112px">신고율</th>
+          <th class="num" style="width:118px">신고금액</th><th class="c-note">비고</th><th class="c-del"></th>
+        </tr></thead>
+        <tbody id="detBody">${detRows || `<tr><td colspan="12" style="padding:20px;text-align:center;color:#8496a9">지급 내역이 없습니다. <b>＋ 행 추가</b> 또는 <b>📥 엑셀 불러오기</b>로 채우세요.</td></tr>`}</tbody>
+        <tfoot>
+          <tr class="total">
+            <td class="lbl" colspan="3">합계</td>
+            <td class="num" id="tAmount">${fmt(dt.amount)}</td>
+            <td></td>
+            <td class="num" id="tTax">${fmt(dt.tax)}</td>
+            <td class="num" id="tRes">${fmt(dt.res)}</td>
+            <td class="num" id="tTotal">${fmt(dt.total)}</td>
+            <td></td>
+            <td class="num" id="tAfter">${fmt2(dt.after)}</td>
+            <td colspan="2"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </article>`;
+
+  const q = $('#q');
+  if (q){ q.addEventListener('input', e => { search = e.target.value; renderMonth(key); const q2 = $('#q'); if(q2){ q2.focus(); q2.setSelectionRange(q2.value.length, q2.value.length);} }); }
+}
+
+function detailRowHtml(r, i){
+  const it = incomeTax(r), rt = residentTax(r), tot = it + rt;
+  const a = afterAmount(r);
+  const manual = r.taxRate == null;
+  const rateSel = `<select class="cell" data-f="taxRate" data-rid="${r.id}">
+      ${TAX_RATES.map(o => `<option value="${o.v}"${r.taxRate===o.v?' selected':''}>${o.l}</option>`).join('')}
+      <option value="manual"${manual?' selected':''}>직접</option>
+    </select>`;
+  return `<tr data-rid="${r.id}" class="${i%2?'odd':''}">
+    <td><input class="cell" data-f="date" data-rid="${r.id}" value="${esc(r.date)}" placeholder="26.01.07."></td>
+    <td><input class="cell" data-f="name" data-rid="${r.id}" value="${esc(r.name)}"></td>
+    <td><input class="cell" data-f="item" data-rid="${r.id}" value="${esc(r.item)}"></td>
+    <td class="num"><input class="cell num-in" data-f="amount" data-rid="${r.id}" inputmode="numeric" value="${r.amount?esc(fmt(r.amount)):''}"></td>
+    <td>${rateSel}</td>
+    <td class="num">${manual
+        ? `<input class="cell num-in" data-f="taxManual" data-rid="${r.id}" inputmode="numeric" value="${esc(fmt(it))}">`
+        : `<span class="calc" data-calc="it${r.id}">${fmt(it)}</span>`}</td>
+    <td class="num">${manual
+        ? `<input class="cell num-in" data-f="resManual" data-rid="${r.id}" inputmode="numeric" value="${esc(fmt(rt))}">`
+        : `<span class="calc" data-calc="rt${r.id}">${fmt(rt)}</span>`}</td>
+    <td class="num"><span class="calc strong" data-calc="tt${r.id}">${fmt(tot)}</span></td>
+    <td><select class="cell" data-f="after" data-rid="${r.id}">
+        ${AFTER_MODES.map(o => `<option value="${o.v}"${r.after===o.v?' selected':''}>${o.l}</option>`).join('')}
+      </select></td>
+    <td class="num"><span class="calc" data-calc="af${r.id}">${a==null?'':fmt2(a)}</span></td>
+    <td><input class="cell" data-f="note" data-rid="${r.id}" value="${esc(r.note)}"></td>
+    <td class="c-del"><button class="x" data-act="del-row" data-rid="${r.id}" title="이 행 삭제">−</button></td>
+  </tr>`;
+}
+
+function visibleRows(m){
+  const q = search.trim().toLowerCase();
+  if (!q) return m.rows;
+  return m.rows.filter(r => (r.name||'').toLowerCase().includes(q) || (r.item||'').toLowerCase().includes(q) || (r.note||'').toLowerCase().includes(q));
+}
+
+function emptyHtml(){
+  return `<article class="card">
+    <div class="empty">
+      <h3>2026년 세금신고</h3>
+      <p>1월~12월 강사 지급 내역과 원천세를 한 화면에서 관리합니다.</p>
+      <p>엑셀 파일을 불러오면 12개 월 탭이 그대로 채워지고, 여기서 고친 내용을 다시 엑셀로 저장할 수 있습니다.</p>
+      <div class="act">
+        <button class="btn primary" data-act="import">📥 엑셀(.xlsx) 불러오기</button>
+        <button class="btn" data-act="demo">예시 데이터로 둘러보기</button>
+      </div>
+      <div class="note" style="text-align:left;max-width:560px;margin:20px auto 0">
+        <b>안전 안내</b> — 입력한 자료는 이 브라우저(기기)에만 저장되며 서버로 보내지 않습니다.
+        구글 시트 연동은 <b>🔗 시트 연결</b>에서 직접 켤 때만 동작합니다.
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderAnnual(){
+  const rows = MONTH_KEYS.map(k => {
+    const m = state.months[k], st = summaryTotals(m), dt = detailTotals(m.rows);
+    return {k, m, st, dt};
+  });
+  const T = {count:0, salary:0, day:0, retire:0, work:0, tax:0, res:0, total:0, n:0, amount:0, after:0};
+  rows.forEach(({st, dt}) => {
+    T.count += st['근로'].count; T.salary += st['근로'].salary;
+    T.day += st['일용'].salary; T.retire += st['퇴직'].salary;
+    T.work += st['근로'].salary + st['일용'].salary + st['퇴직'].salary;
+    T.tax += dt.tax; T.res += dt.res; T.total += dt.total; T.n += dt.n; T.amount += dt.amount; T.after += dt.after;
+  });
+  const maxAmt = Math.max(1, ...rows.map(r => r.dt.amount));
+  const body = rows.map(({k, st, dt}) => {
+    const g = st['근로'].salary + st['일용'].salary + st['퇴직'].salary;
+    return `<tr>
+      <td><b>${k}</b></td>
+      <td class="num">${st['근로'].count?fmt(st['근로'].count):''}</td>
+      <td class="num">${fmt(st['근로'].salary)}</td>
+      <td class="num">${fmt(st['일용'].salary)}</td>
+      <td class="num">${fmt(st['퇴직'].salary)}</td>
+      <td class="num calc">${fmt(g)}</td>
+      <td class="num">${dt.n?fmt(dt.n):''}</td>
+      <td class="num">${fmt(dt.amount)}</td>
+      <td class="num">${fmt(dt.tax)}</td>
+      <td class="num">${fmt(dt.res)}</td>
+      <td class="num calc strong">${fmt(dt.total)}</td>
+      <td class="num">${fmt2(dt.after)}</td>
+    </tr>`;
+  }).join('');
+  const chart = rows.map(({k, dt}) => `<div class="bar"><span class="m">${k}</span><span class="t"><i style="width:${Math.max(1, Math.round(dt.amount/maxAmt*100))}%"></i></span><span class="v">${fmt(dt.amount)}</span></div>`).join('');
+
+  $('#app').innerHTML = `
+  <div class="mini">
+    <div>연간 급여 합계<b>${fmt(T.work)}</b></div>
+    <div>강사 지급액<b>${fmt(T.amount)}</b></div>
+    <div>원천세 합계<b>${fmt(T.total)}</b></div>
+    <div>방과후 신고금액<b>${fmt2(T.after)}</b></div>
+  </div>
+  <article class="card">
+    <header class="card-h"><h2>월별 요약</h2><span class="sub">1월~12월</span></header>
+    <div class="scroll">
+      <table class="tbl">
+        <thead><tr>
+          <th>월</th><th class="num">근로 명수</th><th class="num">근로 급여</th><th class="num">일용 급여</th><th class="num">퇴직 급여</th><th class="num">급여 합계</th>
+          <th class="num">강사 건수</th><th class="num">강사 지급액</th><th class="num">소득세</th><th class="num">주민세</th><th class="num">세액 합계</th><th class="num">신고금액</th>
+        </tr></thead>
+        <tbody>${body}</tbody>
+        <tfoot><tr class="total">
+          <td class="lbl">합계</td><td class="num">${fmt(T.count)}</td><td class="num">${fmt(T.salary)}</td><td class="num">${fmt(T.day)}</td><td class="num">${fmt(T.retire)}</td><td class="num">${fmt(T.work)}</td>
+          <td class="num">${fmt(T.n)}</td><td class="num">${fmt(T.amount)}</td><td class="num">${fmt(T.tax)}</td><td class="num">${fmt(T.res)}</td><td class="num">${fmt(T.total)}</td><td class="num">${fmt2(T.after)}</td>
+        </tr></tfoot>
+      </table>
+    </div>
+  </article>
+  <article class="card">
+    <header class="card-h"><h2>월별 강사 지급액</h2></header>
+    <div class="chart">${chart}</div>
+  </article>`;
+}
+
+/* ---------------- 편집 ---------------- */
+const STR_FIELDS = ['label','note','kind','date','name','item','after'];
+const SEL_FIELDS = ['kind','after','taxRate'];   /* select 는 change 에서만 처리 */
+function onInput(e){
+  const el = e.target;
+  if (!el || !el.dataset || !el.dataset.f) return;
+  const f = el.dataset.f;
+  if (SEL_FIELDS.includes(f)) return;
+  if (el.dataset.sid){
+    const s = state.months[currentTab].summary.find(x => x.id === el.dataset.sid);
+    if (!s) return;
+    s[f] = STR_FIELDS.includes(f) ? el.value : num(el.value);
+    refreshSumFoot();
+    saveState();
+    return;
+  }
+  const rid = el.dataset.rid;
+  if (!rid) return;
+  const r = state.months[currentTab].rows.find(x => x.id === rid);
+  if (!r) return;
+  r[f] = STR_FIELDS.includes(f) ? el.value : num(el.value);
+  refreshRow(r);
+  refreshDetFoot();
+  saveState();
+}
+function onBlur(e){
+  const el = e.target;
+  if (!el || !el.dataset || !el.dataset.f) return;
+  const f = el.dataset.f;
+  if (['amount','count','salary','tax','res','taxManual','resManual'].includes(f)){
+    const v = num(el.value);
+    el.value = v ? fmt(v) : '';
+  }
+}
+/* 행 하나만 계산 칸 다시 그리기 (포커스 유지) */
+function refreshRow(r){
+  const tr = $(`tr[data-rid="${r.id}"]`);
+  if (!tr) return;
+  const it = incomeTax(r), rt = residentTax(r), tot = it + rt, a = afterAmount(r);
+  const setTxt = (k, v) => { const el = tr.querySelector(`[data-calc="${k}"]`); if (el) el.textContent = v; };
+  setTxt('it'+r.id, fmt(it)); setTxt('rt'+r.id, fmt(rt)); setTxt('tt'+r.id, fmt(tot));
+  setTxt('af'+r.id, a == null ? '' : fmt2(a));
+  const mi = tr.querySelector(`[data-f="taxManual"]`); if (mi) mi.value = it ? fmt(it) : '';
+  const mr = tr.querySelector(`[data-f="resManual"]`); if (mr) mr.value = rt ? fmt(rt) : '';
+}
+function refreshDetFoot(){
+  const m = state.months[currentTab];
+  const rows = visibleRows(m);
+  const t = detailTotals(rows);
+  const set = (id, v) => { const el = $('#'+id); if (el) el.textContent = v; };
+  set('tAmount', fmt(t.amount)); set('tTax', fmt(t.tax)); set('tRes', fmt(t.res)); set('tTotal', fmt(t.total)); set('tAfter', fmt2(t.after));
+  set('detCount', fmt(t.n) + '건');
+  const qc = $('#qCount'); if (qc) qc.textContent = search ? `검색 ${fmt(t.n)}건 / 전체 ${fmt(m.rows.length)}건` : `전체 ${fmt(m.rows.length)}건`;
+  const mi = $$('.mini b')[3];
+  if (mi && currentTab !== '연간요약') mi.textContent = fmt(detailTotals(m.rows).amount);
+}
+function refreshSumFoot(){
+  /* 입력 중 포커스를 잃지 않도록, 계산 칸만 다시 채운다 */
+  const m = state.months[currentTab];
+  m.summary.forEach(s => {
+    const el = $(`[data-calc="sum${s.id}"]`);
+    if (el) el.textContent = fmt(num(s.tax) + num(s.res));
+  });
+  const st = summaryTotals(m);
+  const grand = KINDS.reduce((a,k) => ({count:a.count+st[k].count, salary:a.salary+st[k].salary, tax:a.tax+st[k].tax, total:a.total+st[k].total}), {count:0,salary:0,tax:0,total:0});
+  $$('#card-sum tfoot tr').forEach(tr => {
+    const k = tr.dataset.foot;
+    const g = k === '총계' ? grand : st[k];
+    if (!g) return;
+    $$('td[data-sk]', tr).forEach(td => {
+      const key = td.dataset.sk;
+      td.textContent = (key === 'count' ? (g.count ? fmt(g.count) : '') : fmt(g[key]));
+    });
+  });
+}
+
+/* ---------------- 행 조작 ---------------- */
+function addRow(){
+  const m = state.months[currentTab];
+  const last = m.rows[m.rows.length - 1];
+  const r = normalizeRow({date: last ? last.date : '', after: m.defaultAfter || '14.9'});
+  m.rows.push(r);
+  saveState(); render();
+  const el = $(`tr[data-rid="${r.id}"] input[data-f="name"]`); if (el) el.focus();
+}
+function addSumRow(){
+  const m = state.months[currentTab];
+  m.summary.push({id: uid(), label: '', kind: '근로', count: 0, salary: 0, tax: 0, res: 0, note: ''});
+  saveState(); render();
+  const el = $(`#card-sum tbody tr:last-child input[data-f="label"]`); if (el) el.focus();
+}
+function delRow(rid){
+  const m = state.months[currentTab];
+  const i = m.rows.findIndex(x => x.id === rid);
+  if (i < 0) return;
+  lastDeleted = {kind: 'detail', key: currentTab, index: i, row: m.rows[i]};
+  m.rows.splice(i, 1);
+  saveState(); render();
+  showToast('행을 삭제했습니다.', '실행취소', undoDelete);
+}
+function delSumRow(sid){
+  const m = state.months[currentTab];
+  const i = m.summary.findIndex(x => x.id === sid);
+  if (i < 0) return;
+  lastDeleted = {kind: 'summary', key: currentTab, index: i, row: m.summary[i]};
+  m.summary.splice(i, 1);
+  saveState(); render();
+  showToast('줄을 삭제했습니다.', '실행취소', undoDelete);
+}
+function undoDelete(){
+  if (!lastDeleted) return;
+  const m = state.months[lastDeleted.key];
+  const arr = lastDeleted.kind === 'detail' ? m.rows : m.summary;
+  arr.splice(Math.min(lastDeleted.index, arr.length), 0, lastDeleted.row);
+  lastDeleted = null;
+  saveState(); render();
+  showToast('되살렸습니다.');
+}
+
+/* ---------------- 엑셀 불러오기 ---------------- */
+function normKey(s){ return String(s == null ? '' : s).replace(/\s+/g, '').trim(); }
+function cellAt(ws, r, c){ return ws[XLSX.utils.encode_cell({r, c})]; }
+function cellText(ws, r, c){ const x = cellAt(ws, r, c); if (!x) return ''; if (x.w != null) return String(x.w).trim(); return String(x.v == null ? '' : x.v).trim(); }
+function cellNum(x){ if (!x) return 0; if (typeof x.v === 'number') return x.v; return num(x.v); }
+function dateText(x){
+  if (!x) return '';
+  if (x.v instanceof Date){
+    const d = x.v, p = (n2) => String(n2).padStart(2, '0');
+    return `${String(d.getFullYear()).slice(2)}.${p(d.getMonth()+1)}.${p(d.getDate())}.`;
+  }
+  return String(x.v == null ? '' : x.v).trim();
+}
+function rateFromFormula(f){
+  if (typeof f !== 'string') return null;
+  const m = f.match(/\*\s*(\d+(?:\.\d+)?)\s*%/);
+  return m ? Number(m[1]) / 100 : null;
+}
+
+function parseSheet(ws){
+  const out = {defaultAfter: '14.9', summary: [], rows: []};
+  if (!ws || !ws['!ref']) return out;
+  const R = XLSX.utils.decode_range(ws['!ref']);
+  const maxR = Math.min(R.e.r, R.s.r + 400);
+  /* 1) 지급 내역 머리글 찾기 */
+  let hdr = -1, cols = null;
+  for (let r = R.s.r; r <= Math.min(maxR, R.s.r + 60); r++){
+    const map = {};
+    for (let c = R.s.c; c <= R.e.c; c++){
+      const t = normKey(cellText(ws, r, c));
+      if (t) map[t] = c;
+    }
+    if (map['지급일자'] != null && map['이름'] != null && map['지급액'] != null){ hdr = r; cols = map; break; }
+  }
+  if (hdr < 0){
+    /* 월별 표가 아닌 시트는 건너뜀 */
+    return out;
+  }
+  const find = (names, fallback) => {
+    for (const nm of names){
+      for (const k in cols){ if (k === nm || k.includes(nm)) return cols[k]; }
+    }
+    return fallback;
+  };
+  const cDate = cols['지급일자'];
+  const cName = cols['이름'];
+  const cItem = find(['건명'], cName + 1);
+  const cAmt  = cols['지급액'];
+  const cTax  = find(['소득세'], null);
+  const cRes  = find(['주민세'], null);
+  const cAfter= find(['방과후강사신고금액','신고금액'], null);
+  const cNote = find(['비고'], null);
+
+  /* 2) 지급 내역 줄 */
+  let blanks = 0, afterCount = {};
+  for (let r = hdr + 1; r <= maxR; r++){
+    const amtCell = cAmt != null ? cellAt(ws, r, cAmt) : null;
+    if (amtCell && typeof amtCell.f === 'string' && /SUM/i.test(amtCell.f)) break;  /* 합계 줄 */
+    if (amtCell && typeof amtCell.f === 'string' && /SUM/i.test(String(amtCell.v||''))) break;
+    const isEmpty = ['', '', '', ''].every((_, i) => {
+      const c = [cDate, cName, cItem, cAmt][i];
+      return c == null || cellText(ws, r, c) === '';
+    });
+    if (isEmpty){ blanks++; if (blanks >= 2) break; continue; }
+    blanks = 0;
+    const taxCell = cTax != null ? cellAt(ws, r, cTax) : null;
+    const resCell = cRes != null ? cellAt(ws, r, cRes) : null;
+    const afterCell = cAfter != null ? cellAt(ws, r, cAfter) : null;
+    let taxRate = 0.03, taxManual = null;
+    if (taxCell){
+      const rr = rateFromFormula(taxCell.f);
+      if (rr != null) taxRate = rr;
+      else if (typeof taxCell.v === 'number') { taxRate = null; taxManual = taxCell.v; }
+      else if (taxCell.v == null || taxCell.v === '') { taxRate = 0.03; }
+      else { taxRate = null; taxManual = num(taxCell.v); }
+    }
+    let resManual = null;
+    if (resCell && typeof resCell.f !== 'string' && resCell.v != null && resCell.v !== ''){
+      resManual = num(resCell.v);
+    }
+    let afterMode = 'none';
+    if (afterCell){
+      if (typeof afterCell.f === 'string'){
+        const rr = rateFromFormula(afterCell.f);
+        if (rr != null) afterMode = (Math.abs(rr - 0.193) < 1e-9) ? '19.3' : '14.9';
+        else if (/(D|E)\d+\s*-\s*G\d+/i.test(afterCell.f.replace(/\$/g,''))) afterMode = 'net';
+      } else if (typeof afterCell.v === 'number' && afterCell.v !== 0){
+        afterMode = 'net';
+      }
+    }
+    afterCount[afterMode] = (afterCount[afterMode] || 0) + 1;
+    out.rows.push(normalizeRow({
+      date: dateText(cellAt(ws, r, cDate)),
+      name: cellText(ws, r, cName),
+      item: cItem != null ? cellText(ws, r, cItem) : '',
+      amount: cellNum(amtCell),
+      taxRate, taxManual, resManual, after: afterMode,
+      note: cNote != null ? cellText(ws, r, cNote) : ''
+    }));
+  }
+  /* 기본 신고율: 실제로 쓰인 비율 중 가장 많은 것 */
+  const modes = Object.entries(afterCount).filter(([k]) => k !== 'none').sort((a,b) => b[1]-a[1]);
+  if (modes.length) out.defaultAfter = modes[0][0];
+
+  /* 3) 근로소득 요약 (지급 내역 머리글 위쪽) */
+  let section = '근로';
+  const base = cDate;
+  for (let r = R.s.r; r < hdr; r++){
+    let marker = '';
+    for (let c = R.s.c; c <= R.e.c; c++){
+      const t = cellText(ws, r, c);
+      if (t.includes('퇴직소득')) { marker = '퇴직'; break; }
+      if (t.includes('근로소득')) { marker = '근로'; break; }
+    }
+    if (marker){ section = marker; continue; }
+    const labelCell = cellAt(ws, r, base);
+    if (!labelCell) continue;
+    if (typeof labelCell.f === 'string') continue;
+    const label = String(labelCell.v == null ? '' : labelCell.v).trim();
+    if (!label) continue;
+    if (['지급일자','이름','건명','지급액','명수','급여','소득세','주민세','합계','비고'].includes(normKey(label))) continue;
+    const cCount = base + 1, cSalary = base + 2, cTax2 = base + 3, cRes2 = base + 4, cNote2 = base + 6;
+    const countCell = cellAt(ws, r, cCount);
+    if (countCell && normKey(countCell.v) === '명수') continue;     /* 머리글 줄 */
+    const nums = [countCell, cellAt(ws, r, cSalary), cellAt(ws, r, cTax2), cellAt(ws, r, cRes2)].filter(Boolean);
+    if (nums.length && nums.every(x => typeof x.f === 'string')) continue;   /* 소계·총계 줄 */
+    const hasNum = nums.some(x => typeof x.v === 'number');
+    /* 아직 금액을 안 채운 빈 줄(작성 전 월)은 지급일 라벨일 때만 남긴다 */
+    if (!hasNum && !/^(\d{1,2}\s*일|말일|일용)/.test(label)) continue;
+    const kind = label.includes('일용') ? '일용' : (section === '퇴직' ? '퇴직' : '근로');
+    out.summary.push({
+      id: uid(), label,
+      kind,
+      count: cellNum(countCell),
+      salary: cellNum(cellAt(ws, r, cSalary)),
+      tax: cellNum(cellAt(ws, r, cTax2)),
+      res: cellNum(cellAt(ws, r, cRes2)),
+      note: cNote2 != null ? cellText(ws, r, cNote2) : ''
+    });
+  }
+  return out;
+}
+
+async function importFile(file){
+  if (!file) return;
+  if (anyData() && !confirm('지금 화면의 자료를 불러온 파일 내용으로 바꿉니다.\n(기기에 저장된 기존 자료도 덮어씁니다.)\n계속할까요?')) return;
+  try{
+    const buf = await file.arrayBuffer();
+    const wb = XLSX.read(buf, {type: 'array', cellFormula: true, cellNF: true, cellDates: true});
+    const parsed = {};
+    let found = 0;
+    wb.SheetNames.forEach(name => {
+      const mm = String(name).trim().match(/^(\d{1,2})\s*월/);
+      if (!mm) return;
+      const idx = Number(mm[1]);
+      if (idx < 1 || idx > 12) return;
+      const key = idx + '월';
+      if (parsed[key]) return;
+      const p = parseSheet(wb.Sheets[name]);
+      parsed[key] = p;
+      if (p.rows.length || p.summary.length) found++;
+    });
+    if (!found){
+      alert('이 파일에서 1월~12월 지급 내역 표를 찾지 못했습니다.\n「지급일자·이름·건명·지급액」 머리글이 있는 시트인지 확인해 주세요.');
+      return;
+    }
+    const next = blankState();
+    MONTH_KEYS.forEach(k => { if (parsed[k]) next.months[k] = parsed[k]; });
+    state = next;
+    search = '';
+    currentTab = '1월';
+    saveState(); render();
+    const rows = MONTH_KEYS.reduce((a,k) => a + state.months[k].rows.length, 0);
+    showToast(`${file.name} — ${found}개 월, ${fmt(rows)}건을 불러왔습니다.`);
+  }catch(err){
+    console.error(err);
+    alert('엑셀을 읽지 못했습니다: ' + (err && err.message ? err.message : err));
+  }
+}
+
+/* ---------------- 엑셀 저장 ---------------- */
+function buildMonthSheet(key, m){
+  const rows = [];   /* 2차원 배열. 셀은 값 또는 {t:'n', f:'수식'} */
+  const push = (arr) => { rows.push(arr); return rows.length; };  /* 1-based 행 번호 */
+  push(['<근로소득>']);
+  push([key, '명수', '급여', '소득세', '주민세', '합계', '비고']);
+
+  const groups = KINDS.map(k => ({kind: k, items: m.summary.filter(s => s.kind === k)})).filter(g => g.items.length);
+  if (!groups.length) groups.push({kind: '근로', items: []});
+  const multi = groups.filter(g => g.items.length).length > 1;
+  const subRows = [];      /* 소계 줄 행 번호 */
+  const dataRows = [];     /* 실제 데이터 줄 범위 */
+
+  groups.forEach(g => {
+    if (!g.items.length) return;
+    if (g.kind === '퇴직') push(['<퇴직소득>']);
+    const first = rows.length + 1;
+    g.items.forEach(s => {
+      const r = push([s.label, num(s.count), num(s.salary), num(s.tax), num(s.res), null, s.note || '']);
+      rows[r-1][5] = {t: 'n', f: `D${r}+E${r}`};
+      dataRows.push(r);
+    });
+    const last = rows.length;
+    if (multi){
+      const lbl = g.kind === '근로' ? '소계' : (g.kind + ' 소계');
+      const r = push([lbl, {t:'n', f:`SUM(B${first}:B${last})`}, {t:'n', f:`SUM(C${first}:C${last})`},
+                      {t:'n', f:`SUM(D${first}:D${last})`}, {t:'n', f:`SUM(E${first}:E${last})`},
+                      {t:'n', f:`SUM(F${first}:F${last})`}, '']);
+      subRows.push(r);
+    }
+  });
+  /* 총계 */
+  if (multi){
+    const terms = subRows.map(r => `B${r}`).join('+');
+    const tot = (col) => ({t:'n', f: subRows.map(r => `${col}${r}`).join('+')});
+    push(['총계', tot('B'), tot('C'), tot('D'), tot('E'), tot('F'), '']);
+  } else if (dataRows.length){
+    const a = dataRows[0], b = dataRows[dataRows.length-1];
+    const tot = (col) => ({t:'n', f:`SUM(${col}${a}:${col}${b})`});
+    push(['', tot('B'), tot('C'), tot('D'), tot('E'), tot('F'), '']);
+  }
+
+  /* 신고율 안내 + 빈 줄 */
+  const rateNote = m.defaultAfter && m.defaultAfter !== 'none' ? `방과후강사 신고율 ${afterLabel(m.defaultAfter)}` : '';
+  push(['', '', '', '', '', '', '', rateNote]);
+  push([]);
+
+  /* 상세 표 */
+  const hdr = push(['지급일자', '이름', '건명', '지급액', '소득세', '주민세', '합계', '방과후강사 신고금액', '비고']);
+  const d1 = rows.length + 1;
+  if (m.rows.length){
+    m.rows.forEach(r => {
+      const rr = push([String(r.date||''), String(r.name||''), String(r.item||''), num(r.amount), null, null, null, null, String(r.note||'')]);
+      const pct = r.taxRate == null ? null : Math.round(Number(r.taxRate) * 1000) / 10;
+      rows[rr-1][4] = r.taxRate == null ? num(r.taxManual) : {t:'n', f:`ROUNDDOWN((D${rr}*${pct}%),-1)`};
+      rows[rr-1][5] = r.resManual == null ? {t:'n', f:`ROUNDDOWN((E${rr}*10%),-1)`} : num(r.resManual);
+      rows[rr-1][6] = {t:'n', f:`E${rr}+F${rr}`};
+      if (r.after === 'none') rows[rr-1][7] = '';
+      else if (r.after === 'net') rows[rr-1][7] = {t:'n', f:`D${rr}-G${rr}`};
+      else rows[rr-1][7] = {t:'n', f:`D${rr}-(D${rr}*${r.after}%)`};
+    });
+    const d2 = rows.length;
+    const tot = (col) => ({t:'n', f:`SUM(${col}${d1}:${col}${d2})`});
+    push(['', '', '', tot('D'), tot('E'), tot('F'), tot('G'), tot('H'), '']);
+  }
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!merges'] = [{s:{r:0,c:0}, e:{r:0,c:6}}];
+  ws['!cols'] = [{wch:12.1},{wch:9},{wch:46},{wch:13.6},{wch:11.9},{wch:10.5},{wch:17.5},{wch:25.6},{wch:17.9}];
+  /* 숫자 서식 */
+  const rng = XLSX.utils.decode_range(ws['!ref']);
+  for (let r = 0; r <= rng.e.r; r++){
+    for (let c = 0; c <= rng.e.c; c++){
+      const cell = ws[XLSX.utils.encode_cell({r, c})];
+      if (!cell) continue;
+      if (cell.t === 'n') cell.z = NUMFMT;
+      if (cell.t === 's'){ cell.s = {alignment: {wrapText: false, vertical: 'center'}}; }
+    }
+  }
+  /* 머리글 줄은 굵게(엑셀에서 글꼴은 참고용) */
+  ws['!rows'] = [];
+  return ws;
+}
+
+function exportXlsx(){
+  try{
+    if (!anyData()){
+      if (!confirm('아직 자료가 없습니다. 빈 서식(1월~12월)으로 저장할까요?')) return;
+    }
+    const wb = XLSX.utils.book_new();
+    MONTH_KEYS.forEach(k => {
+      const ws = buildMonthSheet(k, state.months[k]);
+      XLSX.utils.book_append_sheet(wb, ws, k);
+    });
+    const name = '2026년_세금신고_수정본.xlsx';
+    XLSX.writeFile(wb, name, {compression: true, cellStyles: true});
+    showToast(`${name} 으로 저장했습니다.`);
+  }catch(err){
+    console.error(err);
+    alert('엑셀 저장 중 문제가 생겼습니다: ' + (err && err.message ? err.message : err));
+  }
+}
+
+/* ---------------- 예시 데이터 ---------------- */
+function demoData(){
+  const s = blankState();
+  const jan = s.months['1월'];
+  jan.summary = [
+    {id: uid(), label: '17일', kind: '근로', count: 3, salary: 3200000, tax: 45000, res: 4500, note: ''},
+    {id: uid(), label: '25일', kind: '근로', count: 1, salary: 1200000, tax: 30000, res: 3000, note: ''},
+    {id: uid(), label: '말일', kind: '근로', count: 0, salary: 0, tax: 0, res: 0, note: '예시'}
+  ];
+  jan.rows = [
+    {id: uid(), date: '26.01.07.', name: '김예시', item: '12월 늘봄학교 방과후프로그램 강사료', amount: 420000, taxRate: 0.03, taxManual: null, resManual: null, after: '14.9', note: ''},
+    {id: uid(), date: '26.01.07.', name: '이예시', item: '12월 협력교사 강사료', amount: 1550000, taxRate: 0.03, taxManual: null, resManual: null, after: 'none', note: ''},
+    {id: uid(), date: '26.01.15.', name: '박예시', item: '12월 예술동아리 강사료', amount: 800000, taxRate: 0.03, taxManual: null, resManual: null, after: 'none', note: ''}
+  ];
+  s.months['2월'].rows = [
+    {id: uid(), date: '26.02.05.', name: '김예시', item: '1월 늘봄학교 방과후프로그램 강사료', amount: 420000, taxRate: 0.03, taxManual: null, resManual: null, after: '14.9', note: ''}
+  ];
+  state = s; currentTab = '1월'; search = '';
+  saveState(); render();
+  showToast('예시 데이터를 넣었습니다. 실제 자료를 불러오면 바뀝니다.');
+}
+
+/* ---------------- 구글 시트 연동 ---------------- */
+function getSyncCfg(){
+  try{ return JSON.parse(localStorage.getItem(SYNC_KEY) || '{}') || {}; }catch(e){ return {}; }
+}
+function setSyncCfg(cfg){ localStorage.setItem(SYNC_KEY, JSON.stringify(cfg)); }
+function exportState(){
+  const months = {};
+  MONTH_KEYS.forEach(k => {
+    const m = state.months[k];
+    months[k] = {
+      defaultAfter: m.defaultAfter,
+      summary: m.summary.map(s => ({label: s.label, kind: s.kind, count: num(s.count), salary: num(s.salary), tax: num(s.tax), res: num(s.res), note: s.note || ''})),
+      rows: m.rows.map(r => ({date: r.date, name: r.name, item: r.item, amount: num(r.amount), taxRate: r.taxRate, taxManual: r.taxManual, resManual: r.resManual, after: r.after, note: r.note || ''}))
+    };
+  });
+  return {title: state.title, months};
+}
+function importStatePayload(data){
+  if (!data || !data.months) throw new Error('받은 자료에 월별 데이터가 없습니다.');
+  const next = blankState();
+  MONTH_KEYS.forEach(k => {
+    const m = data.months[k];
+    if (!m) return;
+    next.months[k] = {
+      defaultAfter: m.defaultAfter || '14.9',
+      summary: (m.summary || []).map(x => ({id: uid(), label: x.label || '', kind: KINDS.includes(x.kind) ? x.kind : '근로', count: num(x.count), salary: num(x.salary), tax: num(x.tax), res: num(x.res), note: x.note || ''})),
+      rows: (m.rows || []).map(normalizeRow)
+    };
+  });
+  state = next;
+}
+async function syncRequest(action, payload){
+  const cfg = getSyncCfg();
+  if (!cfg.url || !cfg.token) throw new Error('먼저 주소와 비밀번호를 저장해 주세요.');
+  const url = cfg.url.trim();
+  if (!/^https:\/\/script\.google\.com\//.test(url) && !/^https:\/\//.test(url)) throw new Error('Apps Script 주소(https://…/exec)를 넣어 주세요.');
+  if (action === 'load' || action === 'ping'){
+    const u = url + (url.includes('?') ? '&' : '?') + 'action=' + action + '&token=' + encodeURIComponent(cfg.token) + '&_=' + Date.now();
+    const res = await fetch(u, {method: 'GET', redirect: 'follow'});
+    const txt = await res.text();
+    let j; try{ j = JSON.parse(txt); }catch(e){ throw new Error('시트 응답을 읽지 못했습니다. 배포 주소와 액세스 권한(모든 사용자)을 확인해 주세요.'); }
+    if (!j.ok) throw new Error(j.error || '시트가 요청을 거부했습니다.');
+    return j;
+  }
+  const body = JSON.stringify({token: cfg.token, action: 'save', data: payload});
+  const res = await fetch(url, {method: 'POST', headers: {'Content-Type': 'text/plain;charset=utf-8'}, body, redirect: 'follow'});
+  const txt = await res.text();
+  let j; try{ j = JSON.parse(txt); }catch(e){ throw new Error('시트 응답을 읽지 못했습니다.'); }
+  if (!j.ok) throw new Error(j.error || '저장이 거부되었습니다.');
+  return j;
+}
+function openSync(){
+  const cfg = getSyncCfg();
+  $('#modal').innerHTML = `
+    <h3>🔗 구글 시트 연결</h3>
+    <div class="bd">
+      <p>구글 시트와 이 화면을 연결합니다. 주소와 비밀번호는 <b>이 기기의 브라우저에만</b> 저장되고, 엑셀로 내보내는 파일에는 들어가지 않습니다.</p>
+      <label for="syncUrl">Apps Script 웹앱 주소 (/exec)</label>
+      <input type="text" id="syncUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${esc(cfg.url||'')}">
+      <label for="syncToken">비밀번호</label>
+      <input type="password" id="syncToken" placeholder="시트에 설정한 비밀번호" value="${esc(cfg.token||'')}">
+      <div class="st" id="syncSt"></div>
+      <div class="note">
+        <b>처음 한 번만</b> — 구글 시트 → 확장 프로그램 → Apps Script 에 <b>tax-apps-script.txt</b> 내용을 붙여넣고,
+        「배포 → 웹 앱」에서 <b>다음 사용자로 실행: 나</b>, <b>액세스 권한: 모든 사용자</b>로 배포한 뒤 그 주소(/exec)를 위에 넣으세요.
+        시트에는 비밀번호가 걸려 있어, 비밀번호를 아는 사람만 읽고 쓸 수 있습니다.
+      </div>
+    </div>
+    <div class="ft">
+      <button class="btn ghost" data-act="modal-close">닫기</button>
+      <button class="btn" data-act="sync-save">저장</button>
+      <button class="btn" data-act="sync-test">연결 확인</button>
+      <button class="btn" data-act="sync-pull">⬇ 시트에서 불러오기</button>
+      <button class="btn primary" data-act="sync-push">⬆ 시트로 저장</button>
+    </div>`;
+  $('#mask').classList.add('on');
+}
+function syncSt(msg, ok){ const el = $('#syncSt'); if (!el) return; el.textContent = msg; el.className = 'st ' + (ok ? 'ok' : 'err'); }
+function saveSyncCfgFromModal(){
+  const url = ($('#syncUrl')?.value || '').trim();
+  const token = ($('#syncToken')?.value || '').trim();
+  setSyncCfg({url, token});
+  return {url, token};
+}
+
+/* ---------------- 토스트 / 모달 ---------------- */
+let toastT = null;
+function showToast(msg, actLabel, actFn){
+  const el = $('#toast');
+  el.innerHTML = `<span>${esc(msg)}</span>` + (actLabel ? `<button id="toastAct">${esc(actLabel)}</button>` : '');
+  el.classList.add('on');
+  if (actLabel && actFn) $('#toastAct').onclick = () => { actFn(); hideToast(); };
+  clearTimeout(toastT);
+  toastT = setTimeout(hideToast, actLabel ? 7000 : 3200);
+}
+function hideToast(){ $('#toast').classList.remove('on'); }
+
+/* ---------------- 이벤트 ---------------- */
+document.addEventListener('click', async (e) => {
+  const t = e.target.closest('[data-act]');
+  if (!t) return;
+  const act = t.dataset.act;
+  if (act === 'tab'){ currentTab = t.dataset.tab; search = ''; render(); window.scrollTo({top: 0}); return; }
+  if (act === 'import'){ $('#file').click(); return; }
+  if (act === 'export'){ exportXlsx(); return; }
+  if (act === 'print'){ window.print(); return; }
+  if (act === 'sync'){ openSync(); return; }
+  if (act === 'reset'){
+    if (!confirm('화면의 모든 자료를 지웁니다.\n(기기에 저장된 내용도 함께 지워집니다. 엑셀로 먼저 저장해 두세요.)')) return;
+    state = blankState(); search = ''; currentTab = '1월'; saveState(); render();
+    showToast('초기화했습니다.'); return;
+  }
+  if (act === 'add-row'){ addRow(); return; }
+  if (act === 'add-sum'){ addSumRow(); return; }
+  if (act === 'del-row'){ delRow(t.dataset.rid); return; }
+  if (act === 'del-sum'){ delSumRow(t.dataset.sid); return; }
+  if (act === 'demo'){ demoData(); return; }
+  if (act === 'sync-save'){ saveSyncCfgFromModal(); syncSt('저장했습니다.', true); return; }
+  if (act === 'sync-test'){
+    saveSyncCfgFromModal(); syncSt('확인 중…', true);
+    try{ const j = await syncRequest('ping'); syncSt(`연결됨 — ${j.title || '시트'} (${(j.sheets||[]).length}개 탭)`, true); }
+    catch(err){ syncSt('연결 실패: ' + err.message, false); }
+    return;
+  }
+  if (act === 'sync-pull'){
+    saveSyncCfgFromModal();
+    if (anyData() && !confirm('시트 내용으로 이 화면을 덮어씁니다. 계속할까요?')) return;
+    syncSt('불러오는 중…', true);
+    try{
+      const j = await syncRequest('load');
+      importStatePayload(j.data);
+      saveState(); render(); $('#mask').classList.remove('on');
+      const n = MONTH_KEYS.reduce((a,k) => a + state.months[k].rows.length, 0);
+      showToast(`시트에서 ${fmt(n)}건을 불러왔습니다.`);
+    }catch(err){ syncSt('불러오기 실패: ' + err.message, false); }
+    return;
+  }
+  if (act === 'sync-push'){
+    saveSyncCfgFromModal();
+    if (!confirm('이 화면의 내용으로 구글 시트 1월~12월 탭을 다시 씁니다.\n(시트에 있는 다른 내용은 사라집니다.) 계속할까요?')) return;
+    syncSt('저장하는 중…', true);
+    try{
+      const j = await syncRequest('save', exportState());
+      syncSt(`저장 완료 — ${j.months || 0}개 월, ${fmt(j.rows||0)}건`, true);
+      showToast('구글 시트에 저장했습니다.');
+    }catch(err){ syncSt('저장 실패: ' + err.message, false); }
+    return;
+  }
+  if (act === 'modal-close'){ $('#mask').classList.remove('on'); return; }
+});
+document.addEventListener('input', onInput);
+document.addEventListener('change', (e) => {
+  const el = e.target;
+  if (el.id === 'defAfter'){ state.months[currentTab].defaultAfter = el.value; saveState(); return; }
+  if (el.dataset && el.dataset.f === 'kind'){
+    const s = state.months[currentTab].summary.find(x => x.id === el.dataset.sid);
+    if (!s) return;
+    s.kind = KINDS.includes(el.value) ? el.value : '근로';
+    saveState(); render(); return;
+  }
+  if (el.dataset && el.dataset.f === 'taxRate'){
+    const m = state.months[currentTab];
+    const r = m.rows.find(x => x.id === el.dataset.rid);
+    if (!r) return;
+    if (el.value === 'manual'){
+      r.taxManual = incomeTax(r);
+      r.resManual = residentTax(r);
+      r.taxRate = null;
+    } else {
+      r.taxRate = Number(el.value);
+      r.taxManual = null;
+      r.resManual = null;
+    }
+    saveState(); render(); return;
+  }
+  if (el.dataset && el.dataset.f === 'after'){
+    const r = state.months[currentTab].rows.find(x => x.id === el.dataset.rid);
+    if (!r) return;
+    r.after = ['14.9','19.3','net','none'].includes(el.value) ? el.value : 'none';
+    refreshRow(r); refreshDetFoot(); saveState(); return;
+  }
+});
+document.addEventListener('blur', onBlur, true);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape'){ $('#mask').classList.remove('on'); }
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's'){ e.preventDefault(); exportXlsx(); }
+});
+$('#mask').addEventListener('click', (e) => { if (e.target.id === 'mask') $('#mask').classList.remove('on'); });
+$('#file').addEventListener('change', (e) => {
+  const f = e.target.files && e.target.files[0];
+  e.target.value = '';
+  if (f) importFile(f);
+});
+window.addEventListener('beforeunload', () => {
+  try{ state.savedAt = new Date().toISOString(); localStorage.setItem(STORE_KEY, JSON.stringify(state)); }catch(e){}
+});
+if ('serviceWorker' in navigator && location.protocol === 'https:'){
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+}
+
+/* ---------------- 시작 ---------------- */
+loadState();
+render();
+</script>
+</body>
+</html>
