@@ -429,7 +429,9 @@ function loadState(){
         base.savedAt = s.savedAt || '';
         state = base;
       } else if (s && s.months){
-        /* 예전 판(2026년 한 해) → 2026년 탭으로 그대로 이어받기 */
+        /* 예전 판(2026년 한 해) → 2026년 탭으로 그대로 이어받기
+           (혹시 몰라 이어받기 전 원본을 한 벌 따로 남겨 둔다) */
+        try{ localStorage.setItem(STORE_KEY + '.backup', raw); }catch(e){}
         const base = blankState();
         base.years[2026] = normalizeYear(2026, s, false);
         base.activeYear = 2026;
