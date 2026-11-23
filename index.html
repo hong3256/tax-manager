@@ -799,7 +799,15 @@ function renderCumulative(){
     return {yy, t: t2, teachers};
   });
 
-  $('#app').innerHTML = `
+  const empty = !yearHasRows(y);
+  const prev = empty ? prevYearWithRows() : null;
+  const emptyTip = empty ? `<div class="tipbar">
+      <span><b>${y.year}년</b>에는 아직 지급 내역이 없습니다. 1월 탭에서 <b>＋ 행 추가</b>로 입력하거나 엑셀을 불러오면 여기에 누적이 채워집니다.</span>
+      <button class="btn sm" data-act="tab" data-tab="1월">1월 탭으로</button>
+      ${prev ? `<button class="btn sm" data-act="copy-prev">${prev}년 틀 가져오기</button>` : ''}
+    </div>` : '';
+
+  $('#app').innerHTML = `${emptyTip}
   <div class="stats">
     <div class="stat"><span>총 지급건수</span><b>${fmt(T.n)}건</b></div>
     <div class="stat"><span>총 지급액</span><b>${fmt(T.amount)}</b></div>
