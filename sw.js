@@ -1,9 +1,9 @@
-/* 2026년 세금신고 — 서비스 워커
+/* 세금신고(강사 지급·원천세) — 서비스 워커
    - index.html 은 network-first: 열 때마다 새 판을 먼저 받고, 인터넷이 없으면 캐시로 연다.
    - SheetJS(xlsx.full.min.js)·아이콘·매니페스트는 캐시 우선(stale-while-revalidate).
    - 입력한 자료는 서비스 워커가 아니라 브라우저 localStorage 에만 있다.
 */
-var CACHE = 'tax-manager-v1';
+var CACHE = 'tax-manager-v2';
 var SHELL = new URL('./index.html', self.location.href).href;
 var CORE = [
   './',

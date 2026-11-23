@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="강사세금">
-<title>2026년 세금신고 — 강사 지급·원천세 관리</title>
+<title>세금신고 — 강사 지급·원천세 관리</title>
 <link rel="manifest" href="./manifest.json">
 <link rel="apple-touch-icon" href="./apple-touch-icon.png">
 <link rel="icon" href="./favicon.ico" sizes="any">
@@ -48,6 +48,17 @@ button{font-family:inherit}
 .btn.sm{padding:4px 9px; font-size:12px; min-height:30px}
 .btn:disabled{opacity:.5; cursor:not-allowed}
 .ibtn{border:1px solid var(--line); background:#f7f9fc; border-radius:9px; padding:6px 8px; font-size:15px; line-height:1; cursor:pointer; min-width:36px; min-height:34px}
+/* 연도 탭 */
+.yearbar{max-width:1180px; margin:0 auto; padding:0 12px 6px; display:flex; gap:5px; align-items:center; overflow-x:auto; scrollbar-width:thin}
+.ytab{
+  border:1px solid var(--line); background:#f4f7fb; color:#31465c; border-radius:999px;
+  padding:5px 12px; font-size:12.5px; font-weight:800; cursor:pointer; white-space:nowrap; letter-spacing:-.2px;
+}
+.ytab:hover{background:#eaf1f9}
+.ytab.on{background:var(--navy); border-color:var(--navy); color:#fff; box-shadow:0 1px 4px rgba(31,78,121,.3)}
+.ytab .dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:#7cb342; margin-left:5px; vertical-align:1px}
+.ytab.on .dot{background:#ffd54a}
+.ytab.add{background:transparent; border-style:dashed; color:var(--muted); font-weight:700}
 /* 탭 */
 .tabs{max-width:1180px; margin:0 auto; padding:0 8px 8px; display:flex; gap:4px; overflow-x:auto; scrollbar-width:thin}
 .tab{
@@ -57,6 +68,7 @@ button{font-family:inherit}
 .tab.on{background:#fff; border-bottom-color:#fff; color:var(--navy); box-shadow:0 -2px 0 var(--navy) inset}
 .tab .dot{display:inline-block; width:6px; height:6px; border-radius:50%; background:#7cb342; margin-left:5px; vertical-align:1px}
 .tab.sum{background:#eef4ff}
+.tab.sum.on{box-shadow:0 -2px 0 #2a7d5f inset; color:#1d5c46}
 /* ---------- 본문 ---------- */
 main{max-width:1180px; margin:0 auto; padding:14px 12px 60px}
 .card{background:var(--card); border:1px solid var(--line); border-radius:12px; margin:0 0 14px; overflow:hidden; box-shadow:0 1px 3px rgba(18,37,58,.05)}
@@ -75,6 +87,7 @@ table{border-collapse:collapse; width:100%}
 .tbl td.num,.tbl th.num{text-align:right}
 .tbl tbody tr:hover td{background:#fcfdff}
 .tbl tbody tr.odd td{background:#fafcff}
+.tbl tbody tr.cur td{background:#eef4ff}
 .calc{font-variant-numeric:tabular-nums; font-weight:700; color:#2b3f57; padding:6px 8px !important; white-space:nowrap}
 .calc.strong{color:var(--navy)}
 .calc.muted{color:#93a2b4; font-weight:600}
@@ -121,6 +134,25 @@ select.cell:focus{outline:2px solid var(--navy2)}
 .mini{display:flex; gap:14px; flex-wrap:wrap; padding:9px 13px; background:#f8fbff; border-bottom:1px solid var(--line2)}
 .mini div{font-size:12px; color:var(--muted); font-weight:700}
 .mini b{color:var(--navy); font-size:13.5px; margin-left:4px; font-variant-numeric:tabular-nums}
+/* 누적 총계 카드 */
+.stats{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:9px; margin:0 0 14px}
+.stat{background:#fff; border:1px solid var(--line); border-radius:11px; padding:9px 12px; box-shadow:0 1px 3px rgba(18,37,58,.05)}
+.stat span{display:block; font-size:11.5px; font-weight:800; color:var(--muted); letter-spacing:-.1px}
+.stat b{display:block; margin-top:3px; font-size:16.5px; color:var(--navy); font-variant-numeric:tabular-nums; letter-spacing:-.4px}
+.stat.hi{background:#eef4ff; border-color:#c9d9ef}
+.stat.hi b{color:#123d63}
+/* 정렬 머리글 */
+th.sortable{cursor:pointer; user-select:none}
+th.sortable:hover{background:#e7f0fa}
+th .ar{font-size:9.5px; color:#8ea3ba; margin-left:2px; vertical-align:1px}
+th.sorted .ar{color:var(--navy2)}
+/* 안내 막대 */
+.tipbar{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap; background:#fffbe8; border:1px solid #efdfa4;
+  color:#6b5a12; border-radius:11px; padding:9px 12px; margin:0 0 12px; font-size:12.5px; font-weight:700;
+}
+.tipbar .btn{background:#fff; border-color:#e0cf8e; color:#6b5a12}
+.tipbar .btn:hover{background:#fffbee}
 /* 빈 상태 */
 .empty{padding:38px 20px; text-align:center; color:var(--muted)}
 .empty h3{color:var(--navy); margin:0 0 8px; font-size:17px}
@@ -133,6 +165,9 @@ select.cell:focus{outline:2px solid var(--navy2)}
 .bar .t{flex:1; background:#eef3f9; border-radius:5px; height:16px; overflow:hidden}
 .bar .t i{display:block; height:100%; background:linear-gradient(90deg,var(--navy2),var(--navy)); border-radius:5px}
 .bar .v{width:118px; text-align:right; font-variant-numeric:tabular-nums; font-weight:700; color:#2b3f57}
+.tbl.cum{min-width:1020px}
+.tbl.agg{min-width:720px}
+.tbl.cmp{min-width:820px}
 /* 모달 */
 .mask{position:fixed; inset:0; background:rgba(12,25,40,.45); z-index:80; display:none; padding:16px; overflow:auto}
 .mask.on{display:flex; align-items:center; justify-content:center}
@@ -163,7 +198,7 @@ select.cell:focus{outline:2px solid var(--navy2)}
 @media print{
   @page{size:A4 landscape; margin:9mm}
   body{background:#fff; font-size:11px}
-  .stick,.tools,.tabs,.det-tools,.card-h .ch-act,.x,.c-del,.hint,.spacer,#toast,.mask{display:none !important}
+  .stick,.tools,.tabs,.yearbar,.stats,.chart,.btn,.det-tools,.card-h .ch-act,.x,.c-del,.hint,.spacer,#toast,.mask{display:none !important}
   main{max-width:none; padding:0}
   .card{border:0; box-shadow:none; margin:0 0 6mm; break-inside:auto}
   .card-h{background:#fff; border-bottom:1px solid #999; padding:0 0 4px}
@@ -174,6 +209,7 @@ select.cell:focus{outline:2px solid var(--navy2)}
   .print-only{display:block !important}
   tr,td,th{page-break-inside:avoid}
   .scroll{overflow:visible !important}
+  .tbl.cum,.tbl.agg,.tbl.cmp{min-width:0}
 }
 .print-only{display:none}
 .only-mobile{display:none; font-size:11.5px; color:#7b8ca0; font-weight:700}
@@ -183,6 +219,8 @@ select.cell:focus{outline:2px solid var(--navy2)}
   .btn{padding:6px 9px; font-size:12.5px}
   main{padding:10px 8px 50px}
   .tab{padding:6px 10px; font-size:12.5px}
+  .yearbar{padding:0 8px 5px}
+  .ytab{padding:5px 10px; font-size:12px}
   .c-it{min-width:180px}
   .tbl.sum{min-width:600px}
   .tbl.det{min-width:900px}
@@ -193,6 +231,8 @@ select.cell:focus{outline:2px solid var(--navy2)}
   .c-name{width:78px}
   .c-kind{width:62px}
   .c-note{width:96px}
+  .stats{grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px}
+  .stat b{font-size:15px}
   .only-mobile{display:inline}
 }
 @media (prefers-reduced-motion: reduce){*{transition:none !important}}
@@ -204,7 +244,7 @@ select.cell:focus{outline:2px solid var(--navy2)}
     <div class="brand">
       <img class="logo" src="./icon-192.png" alt="">
       <div>
-        <div class="bt">2026년 세금신고</div>
+        <div class="bt" id="brandTitle">세금신고</div>
         <div class="bs" id="statusLine">기기에 자동 저장됩니다</div>
       </div>
     </div>
@@ -213,15 +253,16 @@ select.cell:focus{outline:2px solid var(--navy2)}
       <button class="btn" data-act="export">💾 엑셀(.xlsx) 저장</button>
       <button class="btn" data-act="print">🖨️ 인쇄·PDF</button>
       <button class="btn" data-act="sync">🔗 시트 연결</button>
-      <button class="btn ghost" data-act="reset" title="화면의 데이터를 모두 지웁니다">↺</button>
+      <button class="btn ghost" data-act="reset" title="이 연도의 자료를 모두 지웁니다">↺</button>
     </div>
   </div>
-  <nav class="tabs" id="tabs"></nav>
+  <nav class="yearbar" id="yearbar" aria-label="연도 선택"></nav>
+  <nav class="tabs" id="tabs" aria-label="월 선택"></nav>
 </header>
 
 <main id="app"></main>
 <div class="print-only" style="padding:0 0 6mm">
-  <div style="font-size:15px;font-weight:800">2026년 세금신고</div>
+  <div style="font-size:15px;font-weight:800" id="printTitle">세금신고</div>
   <div style="font-size:11px;color:#555" id="printSub"></div>
 </div>
 
@@ -234,19 +275,24 @@ select.cell:focus{outline:2px solid var(--navy2)}
 <script>
 "use strict";
 /* =====================================================================
-   2026년 세금신고 — 강사 지급·원천세 관리 (단일 파일 웹앱)
-   · 엑셀(.xlsx) 1월~12월 탭 불러오기 / 수정 / 엑셀로 저장
+   세금신고 — 강사 지급·원천세 관리 (단일 파일 웹앱)
+   · 연도 탭(2026·2027·2028…) 별로 1월~12월 자료를 따로 관리
+   · 엑셀(.xlsx) 1월~12월 + 누적합계 시트 불러오기 / 수정 / 엑셀로 저장
    · 소득세(3%·10원 절사)·주민세(10%)·방과후강사 신고금액 자동 계산
    · 기기(localStorage)에 자동 저장, 인쇄·PDF, (선택) 구글 시트 연동
    · 실제 개인정보는 코드에 넣지 않습니다. 데이터는 이 브라우저 안에만 있습니다.
    ===================================================================== */
 const MONTH_KEYS = ['1월','2월','3월','4월','5월','6월','7월','8월','9월','10월','11월','12월'];
-const STORE_KEY = 'mancheon.tax.v1';
-const SYNC_KEY  = 'mancheon.tax.sync.v1';
+const STORE_KEY = 'mancheon.tax.v1';        /* 예전 판과 같은 키 — 있던 자료를 2026년으로 이어받는다 */
+const SYNC_KEY  = 'mancheon.tax.sync.v1';   /* (예전) 시트 설정 한 벌 */
+const SYNC_KEY2 = 'mancheon.tax.sync.v2';   /* 연도별 시트 설정 { 2026:{url,token}, … } */
 const NUMFMT = '_-* #,##0_-;\\-* #,##0_-;_-* " - "_-;_-@_-';
 const KINDS = ['근로','일용','퇴직'];
 const TAX_RATES = [{v:0.03,l:'3%'},{v:0.08,l:'8%'},{v:0,l:'면세'}];
 const AFTER_MODES = [{v:'14.9',l:'14.9%'},{v:'19.3',l:'19.3%'},{v:'net',l:'지급액-세액'},{v:'none',l:'미적용'}];
+const DEFAULT_YEARS = [2026, 2027, 2028];
+const TEMPLATE_LABELS = ['17일','25일','말일'];   /* 새 연도의 근로소득 요약 기본 줄 */
+const CUM_TAB = '누적합계';
 
 /* ---------------- 작은 도구 ---------------- */
 const $ = (s, r) => (r||document).querySelector(s);
@@ -275,6 +321,7 @@ const fmt2 = (v) => {          /* 방과후 신고금액: 소수점이 생기면
   const r = Math.round(x * 100) / 100;
   return (Number.isInteger(r) ? r : r).toLocaleString('ko-KR', {maximumFractionDigits: 2});
 };
+const fz = (v) => (v ? fmt(v) : '');          /* 표 안에서 0은 빈칸으로 */
 const rdown = (v, unit) => { const u = unit || 10; const x = Number(v) || 0; return Math.sign(x) * Math.floor(Math.abs(x) / u) * u; };
 
 /* ---------------- 계산 ---------------- */
@@ -300,43 +347,37 @@ function afterLabel(m){
 }
 
 /* ---------------- 상태 ---------------- */
-function blankMonth(){
-  return {defaultAfter: '14.9', summary: [], rows: []};
+function blankMonth(tpl){
+  const m = {defaultAfter: '14.9', summary: [], rows: []};
+  if (tpl) m.summary = TEMPLATE_LABELS.map(l => ({id: uid(), label: l, kind: '근로', count: 0, salary: 0, tax: 0, res: 0, note: ''}));
+  return m;
+}
+function blankYear(year, tpl){
+  const y = {year: Number(year), months: {}};
+  MONTH_KEYS.forEach(k => y.months[k] = blankMonth(tpl));
+  return y;
 }
 function blankState(){
-  const s = {v: 2, title: '2026년 세금신고', savedAt: '', months: {}};
-  MONTH_KEYS.forEach(k => s.months[k] = blankMonth());
+  const s = {v: 3, savedAt: '', activeYear: DEFAULT_YEARS[0], years: {}};
+  DEFAULT_YEARS.forEach(y => s.years[y] = blankYear(y, y !== DEFAULT_YEARS[0]));
   return s;
 }
 let state = blankState();
 let currentTab = '1월';
 let search = '';
-let lastDeleted = null;   /* {kind:'detail'|'summary', key, index, row} */
+let nameQ = '';
+let nameSort = {key: 'amount', dir: -1};   /* 강사별 표 정렬 */
+let lastDeleted = null;   /* {kind:'detail'|'summary', year, key, index, row} */
 
-function loadState(){
-  try{
-    const raw = localStorage.getItem(STORE_KEY);
-    if (!raw) return;
-    const s = JSON.parse(raw);
-    if (!s || !s.months) return;
-    const base = blankState();
-    MONTH_KEYS.forEach(k => {
-      const m = s.months[k];
-      if (!m) return;
-      base.months[k] = {
-        defaultAfter: m.defaultAfter || '14.9',
-        summary: Array.isArray(m.summary) ? m.summary.map(x => ({
-          id: x.id || uid(), label: x.label || '', kind: KINDS.includes(x.kind) ? x.kind : '근로',
-          count: num(x.count), salary: num(x.salary), tax: num(x.tax), res: num(x.res), note: x.note || ''
-        })) : [],
-        rows: Array.isArray(m.rows) ? m.rows.map(normalizeRow) : []
-      };
-    });
-    base.savedAt = s.savedAt || '';
-    base.title = s.title || base.title;
-    state = base;
-  }catch(e){ console.warn('저장된 자료를 읽지 못했습니다', e); }
+/* 연도 접근자 */
+const yearList = () => Object.keys(state.years).map(Number).filter(y => y > 1900 && y < 2200).sort((a,b) => a-b);
+function curY(){
+  if (!state.years[state.activeYear]) state.years[state.activeYear] = blankYear(state.activeYear, true);
+  return state.years[state.activeYear];
 }
+function M(key){ return curY().months[key]; }
+const isCum = () => currentTab === CUM_TAB;
+
 function normalizeRow(x){
   const r = {
     id: x.id || uid(),
@@ -351,6 +392,53 @@ function normalizeRow(x){
     note: x.note == null ? '' : String(x.note)
   };
   return r;
+}
+function normalizeYear(year, raw, tpl){
+  const hasMonths = !!(raw && raw.months && MONTH_KEYS.some(k => raw.months[k]));
+  const y = blankYear(year, !!tpl && !hasMonths);
+  if (hasMonths){
+    MONTH_KEYS.forEach(k => {
+      const m = raw.months[k];
+      if (!m) return;
+      y.months[k] = {
+        defaultAfter: m.defaultAfter || '14.9',
+        summary: Array.isArray(m.summary) ? m.summary.map(x => ({
+          id: x.id || uid(), label: x.label || '', kind: KINDS.includes(x.kind) ? x.kind : '근로',
+          count: num(x.count), salary: num(x.salary), tax: num(x.tax), res: num(x.res), note: x.note || ''
+        })) : [],
+        rows: Array.isArray(m.rows) ? m.rows.map(normalizeRow) : []
+      };
+    });
+  }
+  return y;
+}
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw){
+      const s = JSON.parse(raw);
+      if (s && s.years && typeof s.years === 'object'){
+        const base = blankState();
+        Object.keys(s.years).forEach(k => {
+          const yr = Number(k);
+          if (!(yr > 1900 && yr < 2200)) return;
+          base.years[yr] = normalizeYear(yr, s.years[k], yr !== 2026);
+        });
+        const ay = Number(s.activeYear);
+        if (base.years[ay]) base.activeYear = ay;
+        base.savedAt = s.savedAt || '';
+        state = base;
+      } else if (s && s.months){
+        /* 예전 판(2026년 한 해) → 2026년 탭으로 그대로 이어받기 */
+        const base = blankState();
+        base.years[2026] = normalizeYear(2026, s, false);
+        base.activeYear = 2026;
+        base.savedAt = s.savedAt || '';
+        state = base;
+      }
+    }
+  }catch(e){ console.warn('저장된 자료를 읽지 못했습니다', e); }
+  migrateSync();
 }
 let saveTimer = null;
 function saveState(){
@@ -369,8 +457,8 @@ function saveState(){
 function renderStatus(){
   const t = state.savedAt ? new Date(state.savedAt) : null;
   const when = t ? t.toLocaleString('ko-KR', {month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit'}) : '—';
-  const total = MONTH_KEYS.reduce((a,k) => a + state.months[k].rows.length, 0);
-  $('#statusLine').textContent = `기기에 자동 저장 · ${when} · 전체 ${fmt(total)}건`;
+  const total = MONTH_KEYS.reduce((a,k) => a + M(k).rows.length, 0);
+  $('#statusLine').textContent = `기기에 자동 저장 · ${when} · ${state.activeYear}년 ${fmt(total)}건`;
 }
 
 /* ---------------- 집계 ---------------- */
@@ -395,32 +483,81 @@ function detailTotals(rows){
   return t;
 }
 function monthHasData(m){ return m.rows.length > 0 || m.summary.length > 0; }
-function anyData(){ return MONTH_KEYS.some(k => monthHasData(state.months[k])); }
+function yearHasRows(y){ return MONTH_KEYS.some(k => y.months[k] && y.months[k].rows.length > 0); }
+function yearHasData(y){ return MONTH_KEYS.some(k => y.months[k] && monthHasData(y.months[k])); }
+function anyData(){ return yearHasData(curY()); }
+
+function yearTotals(y){
+  const t = {count:0, salary:0, day:0, retire:0, work:0, tax:0, res:0, total:0, n:0, amount:0, after:0, stax:0, wtax:0};
+  MONTH_KEYS.forEach(k => {
+    const m = y.months[k]; if (!m) return;
+    const st = summaryTotals(m), dt = detailTotals(m.rows);
+    t.count += st['근로'].count; t.salary += st['근로'].salary;
+    t.day += st['일용'].salary; t.retire += st['퇴직'].salary;
+    t.work += st['근로'].salary + st['일용'].salary + st['퇴직'].salary;
+    t.wtax += st['근로'].total;
+    t.stax += st['근로'].total + st['일용'].total + st['퇴직'].total;
+    t.tax += dt.tax; t.res += dt.res; t.total += dt.total;
+    t.n += dt.n; t.amount += dt.amount; t.after += dt.after;
+  });
+  return t;
+}
+const NO_NAME = '(이름 없음)';
+function instructorTotals(y){
+  const map = new Map();
+  MONTH_KEYS.forEach(k => {
+    const m = y.months[k]; if (!m) return;
+    m.rows.forEach(r => {
+      const name = String(r.name || '').trim() || NO_NAME;
+      const o = map.get(name) || {name, n:0, amount:0, tax:0, res:0, total:0, after:0};
+      o.n++; o.amount += num(r.amount); o.tax += incomeTax(r); o.res += residentTax(r);
+      o.total += rowTotal(r);
+      const a = afterAmount(r); if (a != null) o.after += a;
+      map.set(name, o);
+    });
+  });
+  return Array.from(map.values());
+}
 
 /* ---------------- 화면 ---------------- */
 function render(){
+  renderYearTabs();
   renderTabs();
   renderStatus();
+  const brand = $('#brandTitle'); if (brand) brand.textContent = state.activeYear + '년 세금신고';
+  document.title = `${state.activeYear}년 세금신고 — 강사 지급·원천세 관리`;
+  const pt = $('#printTitle'); if (pt) pt.textContent = state.activeYear + '년 세금신고';
   const ps = $('#printSub');
-  if (ps) ps.textContent = (currentTab === '연간요약' ? '연간요약' : currentTab) + ' · 인쇄 ' + new Date().toLocaleDateString('ko-KR');
-  if (currentTab === '연간요약') renderAnnual();
+  if (ps) ps.textContent = `${state.activeYear}년 ${currentTab} · 인쇄 ${new Date().toLocaleDateString('ko-KR')}`;
+  if (isCum()) renderCumulative();
   else renderMonth(currentTab);
+}
+function renderYearTabs(){
+  const el = $('#yearbar');
+  if (!el) return;
+  const parts = yearList().map(y => {
+    const on = y === state.activeYear ? ' on' : '';
+    const dot = yearHasData(state.years[y]) ? '<span class="dot"></span>' : '';
+    return `<button class="ytab${on}" data-act="year" data-year="${y}" aria-pressed="${y === state.activeYear}">${y}년${dot}</button>`;
+  });
+  parts.push(`<button class="ytab add" data-act="year-add" title="연도 추가">＋ 연도</button>`);
+  el.innerHTML = parts.join('');
 }
 function renderTabs(){
   const el = $('#tabs');
   const parts = MONTH_KEYS.map(k => {
-    const m = state.months[k];
+    const m = M(k);
     const on = k === currentTab ? ' on' : '';
     const dot = m.rows.length ? '<span class="dot"></span>' : '';
     return `<button class="tab${on}" data-act="tab" data-tab="${k}">${k}${dot}</button>`;
   });
-  const onSum = currentTab === '연간요약' ? ' on' : '';
-  parts.push(`<button class="tab sum${onSum}" data-act="tab" data-tab="연간요약">📊 연간요약</button>`);
+  const onSum = isCum() ? ' on' : '';
+  parts.push(`<button class="tab sum${onSum}" data-act="tab" data-tab="${CUM_TAB}">${CUM_TAB}</button>`);
   el.innerHTML = parts.join('');
 }
 
 function renderMonth(key){
-  const m = state.months[key];
+  const m = M(key);
   const app = $('#app');
   if (!monthHasData(m) && !anyData()){
     app.innerHTML = emptyHtml();
@@ -453,7 +590,15 @@ function renderMonth(key){
   const dt = detailTotals(visible);
   const detRows = visible.map((r, i) => detailRowHtml(r, i)).join('');
 
-  app.innerHTML = `
+  /* --- 새 연도 빈 틀: 전년도 강사명 가져오기 --- */
+  const pv = (!yearHasRows(curY())) ? prevYearWithRows() : null;
+  const tip = pv ? `<div class="tipbar">
+      <span>${state.activeYear}년은 아직 비어 있습니다. ${pv}년에 쓰던 <b>강사명·건명</b>을 그대로 가져와 금액만 채울 수 있습니다.</span>
+      <button class="btn sm" data-act="copy-prev">${pv}년 틀 가져오기</button>
+      <span class="hint">가져오지 않고 새로 입력해도 됩니다.</span>
+    </div>` : '';
+
+  app.innerHTML = `${tip}
   <div class="mini">
     <div>근로 급여<b>${fmt(st['근로'].salary)}</b></div>
     <div>일용 급여<b>${fmt(st['일용'].salary)}</b></div>
@@ -463,7 +608,7 @@ function renderMonth(key){
   <article class="card" id="card-sum">
     <header class="card-h">
       <h2>${key} 근로소득 요약</h2>
-      <span class="sub">${m.summary.length}줄</span>
+      <span class="sub">${state.activeYear}년 · ${m.summary.length}줄</span>
       <div class="ch-act">
         <button class="btn sm" data-act="add-sum">＋ 줄 추가</button>
       </div>
@@ -543,7 +688,7 @@ function detailRowHtml(r, i){
       <option value="manual"${manual?' selected':''}>직접</option>
     </select>`;
   return `<tr data-rid="${r.id}" class="${i%2?'odd':''}">
-    <td><input class="cell" data-f="date" data-rid="${r.id}" value="${esc(r.date)}" placeholder="26.01.07."></td>
+    <td><input class="cell" data-f="date" data-rid="${r.id}" value="${esc(r.date)}" placeholder="${String(state.activeYear).slice(2)}.01.07."></td>
     <td><input class="cell" data-f="name" data-rid="${r.id}" value="${esc(r.name)}"></td>
     <td><input class="cell" data-f="item" data-rid="${r.id}" value="${esc(r.item)}"></td>
     <td class="num"><input class="cell num-in" data-f="amount" data-rid="${r.id}" inputmode="numeric" value="${r.amount?esc(fmt(r.amount)):''}"></td>
@@ -573,7 +718,7 @@ function visibleRows(m){
 function emptyHtml(){
   return `<article class="card">
     <div class="empty">
-      <h3>2026년 세금신고</h3>
+      <h3>${state.activeYear}년 세금신고</h3>
       <p>1월~12월 강사 지급 내역과 원천세를 한 화면에서 관리합니다.</p>
       <p>엑셀 파일을 불러오면 12개 월 탭이 그대로 채워지고, 여기서 고친 내용을 다시 엑셀로 저장할 수 있습니다.</p>
       <div class="act">
@@ -582,71 +727,167 @@ function emptyHtml(){
       </div>
       <div class="note" style="text-align:left;max-width:560px;margin:20px auto 0">
         <b>안전 안내</b> — 입력한 자료는 이 브라우저(기기)에만 저장되며 서버로 보내지 않습니다.
-        구글 시트 연동은 <b>🔗 시트 연결</b>에서 직접 켤 때만 동작합니다.
+        구글 시트 연동은 <b>🔗 시트 연결</b>에서 직접 켤 때만 동작합니다. 연도마다 다른 시트를 연결할 수 있습니다.
       </div>
     </div>
   </article>`;
 }
 
-function renderAnnual(){
-  const rows = MONTH_KEYS.map(k => {
-    const m = state.months[k], st = summaryTotals(m), dt = detailTotals(m.rows);
-    return {k, m, st, dt};
+/* ---------------- 누적합계 ---------------- */
+function sortArrow(key){
+  if (nameSort.key !== key) return '↕';
+  return nameSort.dir > 0 ? '▲' : '▼';
+}
+function renderCumulative(){
+  const y = curY();
+  const T = yearTotals(y);
+  const months = MONTH_KEYS.map(k => {
+    const m = y.months[k], st = summaryTotals(m), dt = detailTotals(m.rows);
+    return {k, st, dt, g: st['근로'].salary + st['일용'].salary + st['퇴직'].salary};
   });
-  const T = {count:0, salary:0, day:0, retire:0, work:0, tax:0, res:0, total:0, n:0, amount:0, after:0};
-  rows.forEach(({st, dt}) => {
-    T.count += st['근로'].count; T.salary += st['근로'].salary;
-    T.day += st['일용'].salary; T.retire += st['퇴직'].salary;
-    T.work += st['근로'].salary + st['일용'].salary + st['퇴직'].salary;
-    T.tax += dt.tax; T.res += dt.res; T.total += dt.total; T.n += dt.n; T.amount += dt.amount; T.after += dt.after;
-  });
-  const maxAmt = Math.max(1, ...rows.map(r => r.dt.amount));
-  const body = rows.map(({k, st, dt}) => {
-    const g = st['근로'].salary + st['일용'].salary + st['퇴직'].salary;
+
+  let run = 0;
+  const body = months.map(({k, st, dt, g}) => {
+    run += dt.amount;
     return `<tr>
       <td><b>${k}</b></td>
-      <td class="num">${st['근로'].count?fmt(st['근로'].count):''}</td>
-      <td class="num">${fmt(st['근로'].salary)}</td>
-      <td class="num">${fmt(st['일용'].salary)}</td>
-      <td class="num">${fmt(st['퇴직'].salary)}</td>
-      <td class="num calc">${fmt(g)}</td>
-      <td class="num">${dt.n?fmt(dt.n):''}</td>
-      <td class="num">${fmt(dt.amount)}</td>
-      <td class="num">${fmt(dt.tax)}</td>
-      <td class="num">${fmt(dt.res)}</td>
-      <td class="num calc strong">${fmt(dt.total)}</td>
-      <td class="num">${fmt2(dt.after)}</td>
+      <td class="num">${fz(st['근로'].count)}</td>
+      <td class="num">${fz(st['근로'].salary)}</td>
+      <td class="num">${fz(st['일용'].salary)}</td>
+      <td class="num">${fz(st['퇴직'].salary)}</td>
+      <td class="num calc">${fz(g)}</td>
+      <td class="num">${fz(dt.n)}</td>
+      <td class="num">${fz(dt.amount)}</td>
+      <td class="num calc">${fz(run)}</td>
+      <td class="num">${fz(dt.tax)}</td>
+      <td class="num">${fz(dt.res)}</td>
+      <td class="num calc strong">${fz(dt.total)}</td>
+      <td class="num">${fz(dt.after)}</td>
     </tr>`;
   }).join('');
-  const chart = rows.map(({k, dt}) => `<div class="bar"><span class="m">${k}</span><span class="t"><i style="width:${Math.max(1, Math.round(dt.amount/maxAmt*100))}%"></i></span><span class="v">${fmt(dt.amount)}</span></div>`).join('');
+  const maxAmt = Math.max(1, ...months.map(m => m.dt.amount));
+  const chart = months.map(({k, dt}) => `<div class="bar"><span class="m">${k}</span><span class="t"><i style="width:${(dt.amount ? Math.max(1, Math.round(dt.amount/maxAmt*100)) : 0)}%"></i></span><span class="v">${fmt(dt.amount)}</span></div>`).join('');
+
+  /* 강사별 연간 누적 */
+  let names = instructorTotals(y);
+  const q = nameQ.trim().toLowerCase();
+  if (q) names = names.filter(o => o.name.toLowerCase().includes(q));
+  const sKey = nameSort.key, sDir = nameSort.dir;
+  names.sort((a, b) => sKey === 'name'
+    ? a.name.localeCompare(b.name, 'ko') * sDir
+    : (num(a[sKey]) - num(b[sKey])) * sDir);
+  const vs = names.reduce((a,o) => ({n:a.n+o.n, amount:a.amount+o.amount, tax:a.tax+o.tax, res:a.res+o.res, total:a.total+o.total, after:a.after+o.after}), {n:0,amount:0,tax:0,res:0,total:0,after:0});
+  const aggHead = [['name','강사',''],['n','건수','num'],['amount','지급액','num'],['tax','소득세','num'],['res','주민세','num'],['total','세액 합계','num'],['after','신고금액','num']]
+    .map(([k,l,cl]) => `<th class="sortable ${cl}${nameSort.key===k?' sorted':''}" data-act="agg-sort" data-key="${k}">${l}<span class="ar">${sortArrow(k)}</span></th>`).join('');
+  const aggBody = names.map((o, i) => `<tr class="${i%2?'odd':''}">
+      <td style="padding:6px 8px;font-weight:700">${esc(o.name)}</td>
+      <td class="num">${fmt(o.n)}</td>
+      <td class="num calc">${fmt(o.amount)}</td>
+      <td class="num">${fmt(o.tax)}</td>
+      <td class="num">${fmt(o.res)}</td>
+      <td class="num calc strong">${fmt(o.total)}</td>
+      <td class="num">${fmt2(o.after)}</td>
+    </tr>`).join('');
+
+  /* 연도별 비교 */
+  const cmp = yearList().map(yy => {
+    const t2 = yearTotals(state.years[yy]);
+    let teachers = 0;
+    const set = new Set();
+    MONTH_KEYS.forEach(k => (state.years[yy].months[k].rows || []).forEach(r => { const nm = String(r.name||'').trim(); if (nm) set.add(nm); }));
+    teachers = set.size;
+    return {yy, t: t2, teachers};
+  });
 
   $('#app').innerHTML = `
-  <div class="mini">
-    <div>연간 급여 합계<b>${fmt(T.work)}</b></div>
-    <div>강사 지급액<b>${fmt(T.amount)}</b></div>
-    <div>원천세 합계<b>${fmt(T.total)}</b></div>
-    <div>방과후 신고금액<b>${fmt2(T.after)}</b></div>
+  <div class="stats">
+    <div class="stat"><span>총 지급건수</span><b>${fmt(T.n)}건</b></div>
+    <div class="stat"><span>총 지급액</span><b>${fmt(T.amount)}</b></div>
+    <div class="stat"><span>소득세</span><b>${fmt(T.tax)}</b></div>
+    <div class="stat"><span>주민세</span><b>${fmt(T.res)}</b></div>
+    <div class="stat hi"><span>세액 합계</span><b>${fmt(T.total)}</b></div>
+    <div class="stat hi"><span>방과후 신고금액</span><b>${fmt2(T.after)}</b></div>
+    <div class="stat"><span>근로 급여 누적</span><b>${fmt(T.salary)}</b></div>
+    <div class="stat"><span>근로 세액 누적</span><b>${fmt(T.wtax)}</b></div>
   </div>
+
   <article class="card">
-    <header class="card-h"><h2>월별 요약</h2><span class="sub">1월~12월</span></header>
+    <header class="card-h"><h2>${y.year}년 월별 누적</h2><span class="sub">1월~12월 · 맨 아래가 연간 누적합계</span><span class="only-mobile">옆으로 밀어 보세요 →</span></header>
     <div class="scroll">
-      <table class="tbl">
+      <table class="tbl cum">
         <thead><tr>
           <th>월</th><th class="num">근로 명수</th><th class="num">근로 급여</th><th class="num">일용 급여</th><th class="num">퇴직 급여</th><th class="num">급여 합계</th>
-          <th class="num">강사 건수</th><th class="num">강사 지급액</th><th class="num">소득세</th><th class="num">주민세</th><th class="num">세액 합계</th><th class="num">신고금액</th>
+          <th class="num">강사 건수</th><th class="num">강사 지급액</th><th class="num">누적 지급액</th><th class="num">소득세</th><th class="num">주민세</th><th class="num">세액 합계</th><th class="num">신고금액</th>
         </tr></thead>
         <tbody>${body}</tbody>
         <tfoot><tr class="total">
-          <td class="lbl">합계</td><td class="num">${fmt(T.count)}</td><td class="num">${fmt(T.salary)}</td><td class="num">${fmt(T.day)}</td><td class="num">${fmt(T.retire)}</td><td class="num">${fmt(T.work)}</td>
-          <td class="num">${fmt(T.n)}</td><td class="num">${fmt(T.amount)}</td><td class="num">${fmt(T.tax)}</td><td class="num">${fmt(T.res)}</td><td class="num">${fmt(T.total)}</td><td class="num">${fmt2(T.after)}</td>
+          <td class="lbl">연간 누적합계</td>
+          <td class="num">${fmt(T.count)}</td><td class="num">${fmt(T.salary)}</td><td class="num">${fmt(T.day)}</td><td class="num">${fmt(T.retire)}</td><td class="num">${fmt(T.work)}</td>
+          <td class="num">${fmt(T.n)}</td><td class="num">${fmt(T.amount)}</td><td class="num">${fmt(T.amount)}</td>
+          <td class="num">${fmt(T.tax)}</td><td class="num">${fmt(T.res)}</td><td class="num">${fmt(T.total)}</td><td class="num">${fmt2(T.after)}</td>
         </tr></tfoot>
       </table>
     </div>
   </article>
+
   <article class="card">
-    <header class="card-h"><h2>월별 강사 지급액</h2></header>
+    <header class="card-h"><h2>${y.year}년 월별 강사 지급액</h2><span class="sub">막대 = 그 달 지급액</span></header>
     <div class="chart">${chart}</div>
+  </article>
+
+  <article class="card">
+    <header class="card-h">
+      <h2>강사별 연간 누적</h2>
+      <span class="sub" id="aggCount">${fmt(names.length)}명${q ? ` / 전체 ${fmt(instructorTotals(y).length)}명` : ''}</span>
+    </header>
+    <div class="det-tools">
+      <input type="search" id="nameQ" placeholder="강사 이름 검색" value="${esc(nameQ)}" autocomplete="off">
+      <span class="hint">머리글을 누르면 그 칸으로 정렬됩니다</span>
+      <span class="spacer"></span>
+      <span class="only-mobile">표는 옆으로 밀어 보세요 →</span>
+    </div>
+    <div class="scroll">
+      <table class="tbl agg">
+        <thead><tr>${aggHead}</tr></thead>
+        <tbody>${aggBody || `<tr><td colspan="7" style="padding:20px;text-align:center;color:#8496a9">${q ? '검색 결과가 없습니다.' : '이 연도에는 아직 지급 내역이 없습니다.'}</td></tr>`}</tbody>
+        <tfoot><tr class="total">
+          <td class="lbl">합계</td><td class="num">${fmt(vs.n)}</td><td class="num">${fmt(vs.amount)}</td>
+          <td class="num">${fmt(vs.tax)}</td><td class="num">${fmt(vs.res)}</td><td class="num">${fmt(vs.total)}</td><td class="num">${fmt2(vs.after)}</td>
+        </tr></tfoot>
+      </table>
+    </div>
+  </article>
+
+  <article class="card">
+    <header class="card-h"><h2>연도별 누적 비교</h2><span class="sub">연도를 누르면 그 해로 이동합니다</span><span class="only-mobile">옆으로 밀어 보세요 →</span></header>
+    <div class="scroll">
+      <table class="tbl cmp">
+        <thead><tr>
+          <th>연도</th><th class="num">지급건수</th><th class="num">지급액</th><th class="num">소득세</th><th class="num">주민세</th>
+          <th class="num">세액 합계</th><th class="num">신고금액</th><th class="num">근로 급여</th><th class="num">강사 수</th>
+        </tr></thead>
+        <tbody>${cmp.map(c => `<tr class="${c.yy === state.activeYear ? 'cur' : ''}">
+          <td>${c.yy === state.activeYear
+            ? `<b>${c.yy}년</b>`
+            : `<button class="btn sm" data-act="year" data-year="${c.yy}" style="min-height:26px;padding:2px 8px">${c.yy}년</button>`}</td>
+          <td class="num">${fmt(c.t.n)}</td><td class="num calc">${fmt(c.t.amount)}</td>
+          <td class="num">${fmt(c.t.tax)}</td><td class="num">${fmt(c.t.res)}</td>
+          <td class="num calc strong">${fmt(c.t.total)}</td><td class="num">${fmt2(c.t.after)}</td>
+          <td class="num">${fmt(c.t.work)}</td><td class="num">${fmt(c.teachers)}</td>
+        </tr>`).join('')}</tbody>
+      </table>
+    </div>
+    <div class="note" style="margin:12px 13px 13px">
+      <b>세액 합계</b>는 지급 내역의 소득세+주민세, <b>근로 급여</b>는 근로소득 요약표의 급여 합계입니다.
+      연도별 비교는 이 브라우저에 저장된 연도 탭 자료를 그대로 더한 값입니다.
+    </div>
   </article>`;
+
+  const nq = $('#nameQ');
+  if (nq){ nq.addEventListener('input', e => {
+    nameQ = e.target.value; renderCumulative();
+    const q2 = $('#nameQ'); if (q2){ q2.focus(); q2.setSelectionRange(q2.value.length, q2.value.length); }
+  }); }
 }
 
 /* ---------------- 편집 ---------------- */
@@ -658,7 +899,7 @@ function onInput(e){
   const f = el.dataset.f;
   if (SEL_FIELDS.includes(f)) return;
   if (el.dataset.sid){
-    const s = state.months[currentTab].summary.find(x => x.id === el.dataset.sid);
+    const s = M(currentTab).summary.find(x => x.id === el.dataset.sid);
     if (!s) return;
     s[f] = STR_FIELDS.includes(f) ? el.value : num(el.value);
     refreshSumFoot();
@@ -667,7 +908,7 @@ function onInput(e){
   }
   const rid = el.dataset.rid;
   if (!rid) return;
-  const r = state.months[currentTab].rows.find(x => x.id === rid);
+  const r = M(currentTab).rows.find(x => x.id === rid);
   if (!r) return;
   r[f] = STR_FIELDS.includes(f) ? el.value : num(el.value);
   refreshRow(r);
@@ -695,7 +936,7 @@ function refreshRow(r){
   const mr = tr.querySelector(`[data-f="resManual"]`); if (mr) mr.value = rt ? fmt(rt) : '';
 }
 function refreshDetFoot(){
-  const m = state.months[currentTab];
+  const m = M(currentTab);
   const rows = visibleRows(m);
   const t = detailTotals(rows);
   const set = (id, v) => { const el = $('#'+id); if (el) el.textContent = v; };
@@ -703,11 +944,11 @@ function refreshDetFoot(){
   set('detCount', fmt(t.n) + '건');
   const qc = $('#qCount'); if (qc) qc.textContent = search ? `검색 ${fmt(t.n)}건 / 전체 ${fmt(m.rows.length)}건` : `전체 ${fmt(m.rows.length)}건`;
   const mi = $$('.mini b')[3];
-  if (mi && currentTab !== '연간요약') mi.textContent = fmt(detailTotals(m.rows).amount);
+  if (mi && !isCum()) mi.textContent = fmt(detailTotals(m.rows).amount);
 }
 function refreshSumFoot(){
   /* 입력 중 포커스를 잃지 않도록, 계산 칸만 다시 채운다 */
-  const m = state.months[currentTab];
+  const m = M(currentTab);
   m.summary.forEach(s => {
     const el = $(`[data-calc="sum${s.id}"]`);
     if (el) el.textContent = fmt(num(s.tax) + num(s.res));
@@ -727,45 +968,81 @@ function refreshSumFoot(){
 
 /* ---------------- 행 조작 ---------------- */
 function addRow(){
-  const m = state.months[currentTab];
+  const m = M(currentTab);
   const last = m.rows[m.rows.length - 1];
-  const r = normalizeRow({date: last ? last.date : '', after: m.defaultAfter || '14.9'});
+  const r = normalizeRow({date: last ? last.date : '', taxRate: 0.03, after: m.defaultAfter || '14.9'});
   m.rows.push(r);
   saveState(); render();
   const el = $(`tr[data-rid="${r.id}"] input[data-f="name"]`); if (el) el.focus();
 }
 function addSumRow(){
-  const m = state.months[currentTab];
+  const m = M(currentTab);
   m.summary.push({id: uid(), label: '', kind: '근로', count: 0, salary: 0, tax: 0, res: 0, note: ''});
   saveState(); render();
   const el = $(`#card-sum tbody tr:last-child input[data-f="label"]`); if (el) el.focus();
 }
 function delRow(rid){
-  const m = state.months[currentTab];
+  const m = M(currentTab);
   const i = m.rows.findIndex(x => x.id === rid);
   if (i < 0) return;
-  lastDeleted = {kind: 'detail', key: currentTab, index: i, row: m.rows[i]};
+  lastDeleted = {kind: 'detail', year: state.activeYear, key: currentTab, index: i, row: m.rows[i]};
   m.rows.splice(i, 1);
   saveState(); render();
   showToast('행을 삭제했습니다.', '실행취소', undoDelete);
 }
 function delSumRow(sid){
-  const m = state.months[currentTab];
+  const m = M(currentTab);
   const i = m.summary.findIndex(x => x.id === sid);
   if (i < 0) return;
-  lastDeleted = {kind: 'summary', key: currentTab, index: i, row: m.summary[i]};
+  lastDeleted = {kind: 'summary', year: state.activeYear, key: currentTab, index: i, row: m.summary[i]};
   m.summary.splice(i, 1);
   saveState(); render();
   showToast('줄을 삭제했습니다.', '실행취소', undoDelete);
 }
 function undoDelete(){
   if (!lastDeleted) return;
-  const m = state.months[lastDeleted.key];
+  const y = state.years[lastDeleted.year];
+  if (!y) return;
+  const m = y.months[lastDeleted.key];
   const arr = lastDeleted.kind === 'detail' ? m.rows : m.summary;
   arr.splice(Math.min(lastDeleted.index, arr.length), 0, lastDeleted.row);
   lastDeleted = null;
   saveState(); render();
   showToast('되살렸습니다.');
+}
+
+/* ---------------- 전년도 강사명 가져오기 ---------------- */
+function prevYearWithRows(){
+  const ys = yearList().filter(y => y < state.activeYear && yearHasRows(state.years[y]));
+  return ys.length ? ys[ys.length - 1] : null;
+}
+function copyPrevSkeleton(){
+  const from = prevYearWithRows();
+  if (!from){ showToast(`${state.activeYear}년 이전 연도에 지급 내역이 없습니다.`); return; }
+  const src = state.years[from], dst = curY();
+  const plan = MONTH_KEYS.map(k => {
+    const seen = new Set(), out = [];
+    ((src.months[k] && src.months[k].rows) || []).forEach(r => {
+      const name = String(r.name || '').trim();
+      if (!name) return;
+      const sig = name + '|' + String(r.item || '');
+      if (seen.has(sig)) return;
+      seen.add(sig);
+      out.push({name, item: String(r.item || '')});
+    });
+    return {k, out};
+  });
+  const total = plan.reduce((a,p) => a + p.out.length, 0);
+  if (!total){ showToast(`${from}년에서 가져올 강사명이 없습니다.`); return; }
+  if (!confirm(`${from}년의 강사명·건명 ${fmt(total)}줄을 ${state.activeYear}년 1월~12월에 빈 금액으로 넣습니다.\n(이미 있는 줄 뒤에 붙습니다.) 계속할까요?`)) return;
+  plan.forEach(({k, out}) => {
+    const m = dst.months[k];
+    out.forEach(({name, item}) => {
+      m.rows.push(normalizeRow({date:'', name, item, amount:0, taxRate:0.03, taxManual:null, resManual:null, after:m.defaultAfter||'14.9', note:''}));
+    });
+  });
+  saveState(); render();
+  showToast(`${from}년에서 ${fmt(total)}줄을 가져왔습니다. 금액만 채우면 됩니다.`);
 }
 
 /* ---------------- 엑셀 불러오기 ---------------- */
@@ -803,7 +1080,7 @@ function parseSheet(ws){
     if (map['지급일자'] != null && map['이름'] != null && map['지급액'] != null){ hdr = r; cols = map; break; }
   }
   if (hdr < 0){
-    /* 월별 표가 아닌 시트는 건너뜀 */
+    /* 월별 표가 아닌 시트(예: 누적합계)는 건너뜀 */
     return out;
   }
   const find = (names, fallback) => {
@@ -911,16 +1188,32 @@ function parseSheet(ws){
   return out;
 }
 
+function yearFromWorkbook(wb){
+  /* 이름을 바꾼 파일도 연도를 알아볼 수 있게: 누적합계 시트 제목(예: "2027년 누적합계")을 읽는다 */
+  for (const name of wb.SheetNames){
+    if (!/누적합계|연간요약/.test(String(name))) continue;
+    const ws = wb.Sheets[name];
+    if (!ws || !ws['!ref']) continue;
+    const R = XLSX.utils.decode_range(ws['!ref']);
+    for (let r = R.s.r; r <= Math.min(R.s.r + 3, R.e.r); r++){
+      for (let c = R.s.c; c <= Math.min(R.s.c + 3, R.e.c); c++){
+        const m = cellText(ws, r, c).match(/(20\d{2}|19\d{2})\s*년/);
+        if (m) return Number(m[1]);
+      }
+    }
+  }
+  return null;
+}
+
 async function importFile(file){
   if (!file) return;
-  if (anyData() && !confirm('지금 화면의 자료를 불러온 파일 내용으로 바꿉니다.\n(기기에 저장된 기존 자료도 덮어씁니다.)\n계속할까요?')) return;
   try{
     const buf = await file.arrayBuffer();
     const wb = XLSX.read(buf, {type: 'array', cellFormula: true, cellNF: true, cellDates: true});
     const parsed = {};
     let found = 0;
     wb.SheetNames.forEach(name => {
-      const mm = String(name).trim().match(/^(\d{1,2})\s*월/);
+      const mm = String(name).trim().match(/^(\d{1,2})\s*월/);   /* 누적합계 등 다른 시트는 건너뜀 */
       if (!mm) return;
       const idx = Number(mm[1]);
       if (idx < 1 || idx > 12) return;
@@ -934,14 +1227,22 @@ async function importFile(file){
       alert('이 파일에서 1월~12월 지급 내역 표를 찾지 못했습니다.\n「지급일자·이름·건명·지급액」 머리글이 있는 시트인지 확인해 주세요.');
       return;
     }
-    const next = blankState();
+    /* 어느 연도 탭으로 넣을지: 파일 이름의 연도 → 누적합계 시트의 연도 → 지금 보고 있는 연도 */
+    const ym = String(file.name || '').match(/(20\d{2}|19\d{2})\s*년?/);
+    let target = ym ? Number(ym[1]) : yearFromWorkbook(wb);
+    if (!(target > 1900 && target < 2200)) target = state.activeYear;
+    const prevY = state.years[target];
+    const had = prevY ? yearHasRows(prevY) : false;
+    if (had && !confirm(`${target}년 자료를 이 파일 내용으로 바꿉니다.\n(다른 연도 자료는 그대로 둡니다.)\n계속할까요?`)) return;
+
+    const next = blankYear(target, true);
     MONTH_KEYS.forEach(k => { if (parsed[k]) next.months[k] = parsed[k]; });
-    state = next;
-    search = '';
-    currentTab = '1월';
+    state.years[target] = next;
+    state.activeYear = target;
+    search = ''; nameQ = ''; currentTab = '1월';
     saveState(); render();
-    const rows = MONTH_KEYS.reduce((a,k) => a + state.months[k].rows.length, 0);
-    showToast(`${file.name} — ${found}개 월, ${fmt(rows)}건을 불러왔습니다.`);
+    const rows = MONTH_KEYS.reduce((a,k) => a + state.years[target].months[k].rows.length, 0);
+    showToast(`${file.name} — ${target}년 ${found}개 월, ${fmt(rows)}건을 불러왔습니다.`);
   }catch(err){
     console.error(err);
     alert('엑셀을 읽지 못했습니다: ' + (err && err.message ? err.message : err));
@@ -1027,24 +1328,94 @@ function buildMonthSheet(key, m){
       if (cell.t === 's'){ cell.s = {alignment: {wrapText: false, vertical: 'center'}}; }
     }
   }
-  /* 머리글 줄은 굵게(엑셀에서 글꼴은 참고용) */
   ws['!rows'] = [];
+  return ws;
+}
+
+function buildCumulativeSheet(y){
+  const rows = [];
+  const push = (a) => { rows.push(a); return rows.length; };
+  const NUM = NUMFMT;
+
+  push([`${y.year}년 누적합계`]);
+  push(['월','근로 명수','근로 급여','일용 급여','퇴직 급여','급여 합계','강사 건수','강사 지급액','누적 지급액','소득세','주민세','세액 합계','신고금액']);
+  const first = rows.length + 1;
+  let run = 0;
+  MONTH_KEYS.forEach(k => {
+    const m = y.months[k], st = summaryTotals(m), dt = detailTotals(m.rows);
+    const g = st['근로'].salary + st['일용'].salary + st['퇴직'].salary;
+    run += dt.amount;
+    push([k, num(st['근로'].count), num(st['근로'].salary), num(st['일용'].salary), num(st['퇴직'].salary),
+          num(g), num(dt.n), num(dt.amount), num(run), num(dt.tax), num(dt.res), num(dt.total), num(dt.after)]);
+  });
+  const last = rows.length;
+  const sum = (col) => ({t:'n', f:`SUM(${col}${first}:${col}${last})`});
+  const totRow = push(['연간 누적합계', sum('B'), sum('C'), sum('D'), sum('E'), sum('F'), sum('G'), sum('H'), null, sum('J'), sum('K'), sum('L'), sum('M')]);
+  rows[totRow-1][8] = {t:'n', f:`H${totRow}`};
+
+  /* 근로소득 요약 누적 */
+  push([]);
+  push(['근로소득 요약 누적']);
+  push(['구분','명수','급여','소득세','주민세','합계']);
+  const gFirst = rows.length + 1;
+  KINDS.forEach(kind => {
+    const a = {count:0, salary:0, tax:0, res:0};
+    MONTH_KEYS.forEach(k => {
+      const s = summaryTotals(y.months[k])[kind];
+      a.count += s.count; a.salary += s.salary; a.tax += s.tax; a.res += s.res;
+    });
+    const r = push([kind, num(a.count), num(a.salary), num(a.tax), num(a.res), null]);
+    rows[r-1][5] = {t:'n', f:`D${r}+E${r}`};
+  });
+  const gLast = rows.length;
+  const s2 = (col) => ({t:'n', f:`SUM(${col}${gFirst}:${col}${gLast})`});
+  push(['합계', s2('B'), s2('C'), s2('D'), s2('E'), s2('F')]);
+
+  /* 강사별 연간 누적 */
+  const who = instructorTotals(y).sort((a,b) => b.amount - a.amount);
+  push([]);
+  push(['강사별 연간 누적']);
+  push(['강사','건수','지급액','소득세','주민세','세액 합계','신고금액']);
+  if (who.length){
+    const nFirst = rows.length + 1;
+    who.forEach(o => {
+      const r = push([o.name, num(o.n), num(o.amount), num(o.tax), num(o.res), null, num(o.after)]);
+      rows[r-1][5] = {t:'n', f:`D${r}+E${r}`};
+    });
+    const nLast = rows.length;
+    const s3 = (col) => ({t:'n', f:`SUM(${col}${nFirst}:${col}${nLast})`});
+    push(['합계', s3('B'), s3('C'), s3('D'), s3('E'), s3('F'), s3('G')]);
+  }
+
+  const ws = XLSX.utils.aoa_to_sheet(rows);
+  ws['!merges'] = [{s:{r:0,c:0}, e:{r:0,c:12}}];
+  ws['!cols'] = [{wch:13},{wch:10},{wch:15},{wch:15},{wch:12},{wch:16},{wch:14},{wch:14},{wch:15},{wch:12},{wch:11},{wch:13},{wch:17}];
+  const rng = XLSX.utils.decode_range(ws['!ref']);
+  for (let r = 0; r <= rng.e.r; r++){
+    for (let c = 0; c <= rng.e.c; c++){
+      const cell = ws[XLSX.utils.encode_cell({r, c})];
+      if (!cell) continue;
+      if (cell.t === 'n') cell.z = NUM;
+      if (cell.t === 's' && /누적|합계/.test(String(cell.v))) cell.s = {font: {bold: true}};
+    }
+  }
   return ws;
 }
 
 function exportXlsx(){
   try{
     if (!anyData()){
-      if (!confirm('아직 자료가 없습니다. 빈 서식(1월~12월)으로 저장할까요?')) return;
+      if (!confirm(`${state.activeYear}년에는 아직 자료가 없습니다. 빈 서식(1월~12월 + 누적합계)으로 저장할까요?`)) return;
     }
     const wb = XLSX.utils.book_new();
+    const y = curY();
     MONTH_KEYS.forEach(k => {
-      const ws = buildMonthSheet(k, state.months[k]);
-      XLSX.utils.book_append_sheet(wb, ws, k);
+      XLSX.utils.book_append_sheet(wb, buildMonthSheet(k, y.months[k]), k);
     });
-    const name = '2026년_세금신고_수정본.xlsx';
+    XLSX.utils.book_append_sheet(wb, buildCumulativeSheet(y), CUM_TAB);
+    const name = `${state.activeYear}년_세금신고_수정본.xlsx`;
     XLSX.writeFile(wb, name, {compression: true, cellStyles: true});
-    showToast(`${name} 으로 저장했습니다.`);
+    showToast(`${name} 으로 저장했습니다. (1월~12월 + ${CUM_TAB} 시트)`);
   }catch(err){
     console.error(err);
     alert('엑셀 저장 중 문제가 생겼습니다: ' + (err && err.message ? err.message : err));
@@ -1054,7 +1425,7 @@ function exportXlsx(){
 /* ---------------- 예시 데이터 ---------------- */
 function demoData(){
   const s = blankState();
-  const jan = s.months['1월'];
+  const jan = s.years[2026].months['1월'];
   jan.summary = [
     {id: uid(), label: '17일', kind: '근로', count: 3, salary: 3200000, tax: 45000, res: 4500, note: ''},
     {id: uid(), label: '25일', kind: '근로', count: 1, salary: 1200000, tax: 30000, res: 3000, note: ''},
@@ -1065,44 +1436,59 @@ function demoData(){
     {id: uid(), date: '26.01.07.', name: '이예시', item: '12월 협력교사 강사료', amount: 1550000, taxRate: 0.03, taxManual: null, resManual: null, after: 'none', note: ''},
     {id: uid(), date: '26.01.15.', name: '박예시', item: '12월 예술동아리 강사료', amount: 800000, taxRate: 0.03, taxManual: null, resManual: null, after: 'none', note: ''}
   ];
-  s.months['2월'].rows = [
+  s.years[2026].months['2월'].rows = [
     {id: uid(), date: '26.02.05.', name: '김예시', item: '1월 늘봄학교 방과후프로그램 강사료', amount: 420000, taxRate: 0.03, taxManual: null, resManual: null, after: '14.9', note: ''}
   ];
-  state = s; currentTab = '1월'; search = '';
+  state = s; currentTab = '1월'; search = ''; nameQ = '';
   saveState(); render();
   showToast('예시 데이터를 넣었습니다. 실제 자료를 불러오면 바뀝니다.');
 }
 
-/* ---------------- 구글 시트 연동 ---------------- */
-function getSyncCfg(){
-  try{ return JSON.parse(localStorage.getItem(SYNC_KEY) || '{}') || {}; }catch(e){ return {}; }
+/* ---------------- 구글 시트 연동 (연도별) ---------------- */
+function readSyncMap(){
+  try{
+    const o = JSON.parse(localStorage.getItem(SYNC_KEY2) || '{}');
+    return (o && typeof o === 'object') ? o : {};
+  }catch(e){ return {}; }
 }
-function setSyncCfg(cfg){ localStorage.setItem(SYNC_KEY, JSON.stringify(cfg)); }
+function migrateSync(){
+  try{
+    const legacy = JSON.parse(localStorage.getItem(SYNC_KEY) || '{}') || {};
+    if (legacy.url || legacy.token){
+      const map = readSyncMap();
+      const cur = map[2026];
+      if (!cur || (!cur.url && !cur.token)){
+        map[2026] = {url: legacy.url || '', token: legacy.token || ''};
+        localStorage.setItem(SYNC_KEY2, JSON.stringify(map));
+      }
+    }
+  }catch(e){}
+}
+function getSyncCfg(year){
+  const map = readSyncMap();
+  const c = map[year || state.activeYear];
+  return (c && (c.url || c.token)) ? {url: c.url || '', token: c.token || ''} : {};
+}
+function setSyncCfg(cfg, year){
+  const map = readSyncMap();
+  map[year || state.activeYear] = {url: cfg.url || '', token: cfg.token || ''};
+  localStorage.setItem(SYNC_KEY2, JSON.stringify(map));
+}
 function exportState(){
   const months = {};
   MONTH_KEYS.forEach(k => {
-    const m = state.months[k];
+    const m = M(k);
     months[k] = {
       defaultAfter: m.defaultAfter,
       summary: m.summary.map(s => ({label: s.label, kind: s.kind, count: num(s.count), salary: num(s.salary), tax: num(s.tax), res: num(s.res), note: s.note || ''})),
       rows: m.rows.map(r => ({date: r.date, name: r.name, item: r.item, amount: num(r.amount), taxRate: r.taxRate, taxManual: r.taxManual, resManual: r.resManual, after: r.after, note: r.note || ''}))
     };
   });
-  return {title: state.title, months};
+  return {title: `${state.activeYear}년 세금신고`, year: state.activeYear, months};
 }
 function importStatePayload(data){
   if (!data || !data.months) throw new Error('받은 자료에 월별 데이터가 없습니다.');
-  const next = blankState();
-  MONTH_KEYS.forEach(k => {
-    const m = data.months[k];
-    if (!m) return;
-    next.months[k] = {
-      defaultAfter: m.defaultAfter || '14.9',
-      summary: (m.summary || []).map(x => ({id: uid(), label: x.label || '', kind: KINDS.includes(x.kind) ? x.kind : '근로', count: num(x.count), salary: num(x.salary), tax: num(x.tax), res: num(x.res), note: x.note || ''})),
-      rows: (m.rows || []).map(normalizeRow)
-    };
-  });
-  state = next;
+  state.years[state.activeYear] = normalizeYear(state.activeYear, data, false);
 }
 async function syncRequest(action, payload){
   const cfg = getSyncCfg();
@@ -1127,9 +1513,9 @@ async function syncRequest(action, payload){
 function openSync(){
   const cfg = getSyncCfg();
   $('#modal').innerHTML = `
-    <h3>🔗 구글 시트 연결</h3>
+    <h3>🔗 구글 시트 연결 — ${state.activeYear}년</h3>
     <div class="bd">
-      <p>구글 시트와 이 화면을 연결합니다. 주소와 비밀번호는 <b>이 기기의 브라우저에만</b> 저장되고, 엑셀로 내보내는 파일에는 들어가지 않습니다.</p>
+      <p><b>${state.activeYear}년</b> 자료를 구글 시트와 연결합니다. 주소와 비밀번호는 <b>이 기기의 브라우저에만</b> 저장되고, 엑셀로 내보내는 파일에는 들어가지 않습니다.</p>
       <label for="syncUrl">Apps Script 웹앱 주소 (/exec)</label>
       <input type="text" id="syncUrl" placeholder="https://script.google.com/macros/s/.../exec" value="${esc(cfg.url||'')}">
       <label for="syncToken">비밀번호</label>
@@ -1138,7 +1524,8 @@ function openSync(){
       <div class="note">
         <b>처음 한 번만</b> — 구글 시트 → 확장 프로그램 → Apps Script 에 <b>tax-apps-script.txt</b> 내용을 붙여넣고,
         「배포 → 웹 앱」에서 <b>다음 사용자로 실행: 나</b>, <b>액세스 권한: 모든 사용자</b>로 배포한 뒤 그 주소(/exec)를 위에 넣으세요.
-        시트에는 비밀번호가 걸려 있어, 비밀번호를 아는 사람만 읽고 쓸 수 있습니다.
+        시트에는 비밀번호가 걸려 있어, 비밀번호를 아는 사람만 읽고 쓸 수 있습니다.<br>
+        <b>연도마다 따로</b> — 2027년은 2027년용 시트(스프레드시트)를 하나 더 만들어 그 주소를 넣으면, 연도별로 다른 시트에 저장됩니다. 연도 탭을 바꾼 뒤 다시 열어 설정하세요.
       </div>
     </div>
     <div class="ft">
@@ -1158,6 +1545,38 @@ function saveSyncCfgFromModal(){
   return {url, token};
 }
 
+/* ---------------- 연도 추가 ---------------- */
+function openYearAdd(){
+  const next = Math.max(...yearList()) + 1;
+  $('#modal').innerHTML = `
+    <h3>＋ 연도 추가</h3>
+    <div class="bd">
+      <p>새 연도 탭을 만듭니다. <b>1월~12월 기본 틀</b>(근로소득 요약 17일·25일·말일)이 함께 준비됩니다.</p>
+      <label for="newYear">연도 (4자리)</label>
+      <input type="text" id="newYear" inputmode="numeric" maxlength="4" value="${next}">
+      <div class="st" id="yearSt"></div>
+    </div>
+    <div class="ft">
+      <button class="btn ghost" data-act="modal-close">닫기</button>
+      <button class="btn primary" data-act="year-add-ok">추가</button>
+    </div>`;
+  $('#mask').classList.add('on');
+  const inp = $('#newYear'); if (inp){ inp.focus(); inp.select(); }
+}
+function addYearFromModal(){
+  const v = Number(String($('#newYear')?.value || '').replace(/[^0-9]/g, ''));
+  if (!(v > 1900 && v < 2200)){
+    const el = $('#yearSt'); if (el){ el.textContent = '1900~2199 사이 연도를 넣어 주세요.'; el.className = 'st err'; }
+    return;
+  }
+  $('#mask').classList.remove('on');
+  const isNew = !state.years[v];
+  if (isNew) state.years[v] = blankYear(v, true);
+  state.activeYear = v; currentTab = '1월'; search = ''; nameQ = '';
+  saveState(); render(); window.scrollTo({top: 0});
+  showToast(isNew ? `${v}년 탭을 만들었습니다. 1월~12월 기본 틀이 준비되어 있습니다.` : `${v}년 탭으로 이동했습니다.`);
+}
+
 /* ---------------- 토스트 / 모달 ---------------- */
 let toastT = null;
 function showToast(msg, actLabel, actFn){
@@ -1175,15 +1594,33 @@ document.addEventListener('click', async (e) => {
   const t = e.target.closest('[data-act]');
   if (!t) return;
   const act = t.dataset.act;
-  if (act === 'tab'){ currentTab = t.dataset.tab; search = ''; render(); window.scrollTo({top: 0}); return; }
+  if (act === 'tab'){ currentTab = t.dataset.tab; search = ''; nameQ = ''; render(); window.scrollTo({top: 0}); return; }
+  if (act === 'year'){
+    const y = Number(t.dataset.year);
+    if (!y || y === state.activeYear) return;
+    if (!state.years[y]) state.years[y] = blankYear(y, true);
+    state.activeYear = y; search = ''; nameQ = '';
+    saveState(); render(); window.scrollTo({top: 0});
+    return;
+  }
+  if (act === 'year-add'){ openYearAdd(); return; }
+  if (act === 'year-add-ok'){ addYearFromModal(); return; }
+  if (act === 'agg-sort'){
+    const k = t.dataset.key;
+    nameSort = {key: k, dir: nameSort.key === k ? -nameSort.dir : (k === 'name' ? 1 : -1)};
+    renderCumulative();
+    return;
+  }
+  if (act === 'copy-prev'){ copyPrevSkeleton(); return; }
   if (act === 'import'){ $('#file').click(); return; }
   if (act === 'export'){ exportXlsx(); return; }
   if (act === 'print'){ window.print(); return; }
   if (act === 'sync'){ openSync(); return; }
   if (act === 'reset'){
-    if (!confirm('화면의 모든 자료를 지웁니다.\n(기기에 저장된 내용도 함께 지워집니다. 엑셀로 먼저 저장해 두세요.)')) return;
-    state = blankState(); search = ''; currentTab = '1월'; saveState(); render();
-    showToast('초기화했습니다.'); return;
+    if (!confirm(`${state.activeYear}년 자료를 모두 지웁니다.\n(다른 연도 자료는 그대로 둡니다. 엑셀로 먼저 저장해 두세요.)`)) return;
+    state.years[state.activeYear] = blankYear(state.activeYear, state.activeYear !== DEFAULT_YEARS[0]);
+    search = ''; nameQ = ''; currentTab = '1월'; saveState(); render();
+    showToast(`${state.activeYear}년을 초기화했습니다.`); return;
   }
   if (act === 'add-row'){ addRow(); return; }
   if (act === 'add-sum'){ addSumRow(); return; }
@@ -1199,20 +1636,20 @@ document.addEventListener('click', async (e) => {
   }
   if (act === 'sync-pull'){
     saveSyncCfgFromModal();
-    if (anyData() && !confirm('시트 내용으로 이 화면을 덮어씁니다. 계속할까요?')) return;
+    if (anyData() && !confirm(`${state.activeYear}년 화면을 시트 내용으로 덮어씁니다. 계속할까요?`)) return;
     syncSt('불러오는 중…', true);
     try{
       const j = await syncRequest('load');
       importStatePayload(j.data);
       saveState(); render(); $('#mask').classList.remove('on');
-      const n = MONTH_KEYS.reduce((a,k) => a + state.months[k].rows.length, 0);
-      showToast(`시트에서 ${fmt(n)}건을 불러왔습니다.`);
+      const n = MONTH_KEYS.reduce((a,k) => a + M(k).rows.length, 0);
+      showToast(`시트에서 ${state.activeYear}년 ${fmt(n)}건을 불러왔습니다.`);
     }catch(err){ syncSt('불러오기 실패: ' + err.message, false); }
     return;
   }
   if (act === 'sync-push'){
     saveSyncCfgFromModal();
-    if (!confirm('이 화면의 내용으로 구글 시트 1월~12월 탭을 다시 씁니다.\n(시트에 있는 다른 내용은 사라집니다.) 계속할까요?')) return;
+    if (!confirm(`${state.activeYear}년 화면의 내용으로 구글 시트 1월~12월 탭을 다시 씁니다.\n(시트에 있는 다른 내용은 사라집니다.) 계속할까요?`)) return;
     syncSt('저장하는 중…', true);
     try{
       const j = await syncRequest('save', exportState());
@@ -1226,15 +1663,15 @@ document.addEventListener('click', async (e) => {
 document.addEventListener('input', onInput);
 document.addEventListener('change', (e) => {
   const el = e.target;
-  if (el.id === 'defAfter'){ state.months[currentTab].defaultAfter = el.value; saveState(); return; }
+  if (el.id === 'defAfter'){ M(currentTab).defaultAfter = el.value; saveState(); return; }
   if (el.dataset && el.dataset.f === 'kind'){
-    const s = state.months[currentTab].summary.find(x => x.id === el.dataset.sid);
+    const s = M(currentTab).summary.find(x => x.id === el.dataset.sid);
     if (!s) return;
     s.kind = KINDS.includes(el.value) ? el.value : '근로';
     saveState(); render(); return;
   }
   if (el.dataset && el.dataset.f === 'taxRate'){
-    const m = state.months[currentTab];
+    const m = M(currentTab);
     const r = m.rows.find(x => x.id === el.dataset.rid);
     if (!r) return;
     if (el.value === 'manual'){
@@ -1249,7 +1686,7 @@ document.addEventListener('change', (e) => {
     saveState(); render(); return;
   }
   if (el.dataset && el.dataset.f === 'after'){
-    const r = state.months[currentTab].rows.find(x => x.id === el.dataset.rid);
+    const r = M(currentTab).rows.find(x => x.id === el.dataset.rid);
     if (!r) return;
     r.after = ['14.9','19.3','net','none'].includes(el.value) ? el.value : 'none';
     refreshRow(r); refreshDetFoot(); saveState(); return;
@@ -1258,6 +1695,7 @@ document.addEventListener('change', (e) => {
 document.addEventListener('blur', onBlur, true);
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape'){ $('#mask').classList.remove('on'); }
+  if (e.key === 'Enter' && e.target && e.target.id === 'newYear'){ e.preventDefault(); addYearFromModal(); return; }
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's'){ e.preventDefault(); exportXlsx(); }
 });
 $('#mask').addEventListener('click', (e) => { if (e.target.id === 'mask') $('#mask').classList.remove('on'); });

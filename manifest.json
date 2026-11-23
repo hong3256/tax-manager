@@ -1,20 +1,42 @@
 {
-  "name": "2026년 세금신고 — 강사 지급·원천세 관리",
+  "name": "세금신고 — 강사 지급·원천세 관리(연도별)",
   "short_name": "강사세금",
-  "description": "강사 지급 내역과 원천세(소득세 3%·주민세 10%)를 1월~12월로 관리하고, 엑셀(.xlsx)로 불러오기·저장, 인쇄·PDF까지 하는 웹앱",
+  "description": "강사 지급 내역과 원천세(소득세 3%·주민세 10%)를 연도별·1월~12월로 관리하고, 누적합계·엑셀(.xlsx) 입출력·인쇄까지 하는 웹앱",
   "lang": "ko",
   "dir": "ltr",
   "start_url": "./",
   "scope": "./",
   "id": "./",
   "display": "standalone",
-  "display_override": ["standalone", "minimal-ui"],
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#eef2f7",
   "theme_color": "#1f4e79",
-  "categories": ["productivity", "utilities", "finance"],
+  "categories": [
+    "productivity",
+    "utilities",
+    "finance"
+  ],
   "icons": [
-    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
-    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
-    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
