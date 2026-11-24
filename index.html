@@ -183,6 +183,21 @@ th.sorted .ar{color:var(--navy2)}
 .modal .ft{padding:12px 16px; border-top:1px solid var(--line2); display:flex; gap:8px; justify-content:flex-end; background:#fbfcfe; flex-wrap:wrap}
 .note{font-size:12px; color:var(--muted); line-height:1.55; background:#f6f9fd; border:1px solid var(--line2); border-radius:9px; padding:9px 11px; margin-top:12px}
 .note b{color:#31465c}
+/* 건명 바꾸기 */
+.ifscope{display:flex; flex-direction:column; gap:5px; margin:0}
+.modal .bd .ifscope label{
+  display:flex; align-items:center; gap:8px; font-size:13px; font-weight:600; color:var(--ink);
+  margin:0; padding:8px 10px; border:1px solid var(--line2); border-radius:9px; background:#fbfdff; cursor:pointer;
+}
+.modal .bd .ifscope label:hover{background:#f3f8ff}
+.modal .bd .ifscope input{width:16px; height:16px; margin:0; flex:none; accent-color:var(--navy)}
+.ifprev{margin-top:12px; font-size:12.5px}
+.ifprev .cnt{font-size:13px; font-weight:800; color:var(--navy)}
+.ifprev .cnt.zero{color:var(--muted); font-weight:700}
+.ifprev .ex{margin-top:7px; line-height:1.65; color:#31465c; word-break:break-all}
+.ifprev .ex .who{font-size:11.5px; color:var(--muted); font-weight:700}
+.ifprev .ex .bf{color:#93a2b4; text-decoration:line-through}
+.ifprev .ex .af{color:#1b5e20; font-weight:800; background:#e8f5e9; border-radius:5px; padding:0 4px}
 .st{font-size:12.5px; font-weight:800; margin-top:10px}
 .st.ok{color:#1b5e20}
 .st.err{color:var(--red)}
@@ -646,6 +661,7 @@ function renderMonth(key){
     <div class="det-tools">
       <input type="search" id="q" placeholder="이름·건명 검색" value="${esc(search)}" autocomplete="off">
       <span class="hint" id="qCount">${search ? `검색 ${fmt(dt.n)}건 / 전체 ${fmt(m.rows.length)}건` : `전체 ${fmt(m.rows.length)}건`}</span>
+      <button class="btn sm" data-act="item-fix" title="건명에 들어 있는 글자·숫자를 한꺼번에 바꿉니다">🔄 건명 바꾸기</button>
       <span class="spacer"></span>
       <span class="hint">소득세 3%·주민세 10% 10원 절사 자동</span>
       <span class="only-mobile">표는 옆으로 밀어 보세요 →</span>
@@ -1019,6 +1035,127 @@ function undoDelete(){
   lastDeleted = null;
   saveState(); render();
   showToast('되살렸습니다.');
+}
+
+/* ---------------- 건명 일괄 바꾸기 ---------------- */
+let lastItemFix = null;   /* {year, keys, find, rep, rows:[{id, before, after}]} */
+function itemFixMonths(scope){
+  if (scope === 'year') return MONTH_KEYS.slice();
+  return isCum() ? MONTH_KEYS.slice() : [currentTab];
+}
+function itemFixTargets(scope){
+  const y = curY(), out = [];
+  itemFixMonths(scope).forEach(k => {
+    const m = y.months[k];
+    if (!m) return;
+    (m.rows || []).forEach(r => out.push({k, r}));
+  });
+  return out;
+}
+function itemFixFind(){
+  const find = ($('#ifFind')?.value || '');
+  const rep  = ($('#ifRep')?.value || '');
+  const scope = ($('input[name="ifScope"]:checked')?.value) || 'month';
+  const hits = !find ? [] : itemFixTargets(scope).filter(x => {
+    const it = String(x.r.item || '');
+    return it.includes(find) && it.split(find).join(rep) !== it;
+  });
+  return {find, rep, scope, hits};
+}
+function refreshItemFixPreview(){
+  const box = $('#ifPrev');
+  if (!box) return;
+  const stEl = $('#ifSt'); if (stEl){ stEl.textContent = ''; stEl.className = 'st'; }
+  const {find, rep, scope, hits} = itemFixFind();
+  const where = scope === 'year' ? `${state.activeYear}년 1월~12월` : currentTab;
+  if (!find){
+    box.innerHTML = `<div class="cnt zero">찾을 글자를 입력하면 몇 건이 바뀌는지 바로 보여 드립니다.</div>`;
+    return;
+  }
+  if (!hits.length){
+    const same = itemFixTargets(scope).some(x => String(x.r.item || '').includes(find));
+    box.innerHTML = `<div class="cnt zero">‘${esc(find)}’${same ? '은(는) 지금 글자와 같아' : '가 들어간 건명이'} ${esc(where)}에 ${same ? '바뀔 곳이 없습니다.' : '없습니다.'}</div>`;
+    return;
+  }
+  const f = hits[0], before = String(f.r.item || ''), after = before.split(find).join(rep);
+  box.innerHTML = `<div class="cnt">${fmt(hits.length)}건의 건명이 바뀝니다</div>
+    <div class="ex">예) <span class="who">${esc(f.k)} · ${esc(f.r.name || '이름 없음')}</span><br>
+    <span class="bf">${esc(before)}</span> → <span class="af">${esc(after === '' ? '(빈 칸)' : after)}</span></div>`;
+}
+function openItemFix(){
+  const cur = isCum() ? '1월' : currentTab;
+  $('#modal').innerHTML = `
+    <h3>🔄 건명 바꾸기</h3>
+    <div class="bd">
+      <p>강사 지급 내역의 <b>건명</b>에 들어 있는 같은 글자·숫자를 한꺼번에 바꿉니다. <span class="hint">예: 11월 → 12월</span></p>
+      <label for="ifFind">찾을 글자</label>
+      <input type="text" id="ifFind" placeholder="예: 11월" autocomplete="off">
+      <label for="ifRep">바꿀 글자</label>
+      <input type="text" id="ifRep" placeholder="예: 12월 — 비우면 그 글자를 지웁니다" autocomplete="off">
+      <label>적용 범위</label>
+      <div class="ifscope">
+        <label><input type="radio" name="ifScope" value="month" checked> <span>현재 보고 있는 월만 (<b>${esc(cur)}</b>)</span></label>
+        <label><input type="radio" name="ifScope" value="year"> <span>올해 전체 (<b>${state.activeYear}년 1월~12월</b>)</span></label>
+      </div>
+      <div class="ifprev" id="ifPrev"></div>
+      <div class="st" id="ifSt"></div>
+      <div class="note">이름·금액은 건드리지 않고 <b>건명</b>만 바꿉니다. 검색어로 걸러진 행도 범위 안이면 함께 바뀌고, 적용한 뒤에는 <b>실행취소</b>로 한 번에 되돌릴 수 있습니다.</div>
+    </div>
+    <div class="ft">
+      <button class="btn ghost" data-act="modal-close">닫기</button>
+      <button class="btn primary" data-act="item-fix-ok">적용</button>
+    </div>`;
+  $('#mask').classList.add('on');
+  $('#ifFind').addEventListener('input', refreshItemFixPreview);
+  $('#ifRep').addEventListener('input', refreshItemFixPreview);
+  $$('input[name="ifScope"]').forEach(r => r.addEventListener('change', refreshItemFixPreview));
+  $$('#modal input[type="text"]').forEach(inp => inp.addEventListener('keydown', (e) => {
+    if (e.key !== 'Enter') return;
+    e.preventDefault();
+    const rp = $('#ifRep');
+    if (!rp) return;
+    if (rp.value !== ''){ applyItemFix(); return; }
+    if (inp.id === 'ifFind'){ rp.focus(); return; }
+    const stEl = $('#ifSt');
+    if (stEl){ stEl.textContent = '바꿀 글자가 비어 있습니다. 지우려면 [적용]을 눌러 주세요.'; stEl.className = 'st err'; }
+  }));
+  refreshItemFixPreview();
+  $('#ifFind').focus();
+}
+function applyItemFix(){
+  const {find, rep, scope, hits} = itemFixFind();
+  const stEl = $('#ifSt');
+  const err = (msg) => { if (stEl){ stEl.textContent = msg; stEl.className = 'st err'; } };
+  if (!find){ err('찾을 글자를 넣어 주세요.'); const f = $('#ifFind'); if (f) f.focus(); return; }
+  if (!hits.length){ err('바뀔 건명이 없습니다. 찾을 글자를 확인해 주세요.'); return; }
+  const rows = hits.map(({r}) => {
+    const before = String(r.item || '');
+    const after = before.split(find).join(rep);
+    r.item = after;
+    return {id: r.id, before, after};
+  });
+  lastItemFix = {year: state.activeYear, keys: itemFixMonths(scope), find, rep, rows};
+  $('#mask').classList.remove('on');
+  saveState(); render();
+  showToast(`${fmt(rows.length)}건의 건명을 바꿨습니다.`, '실행취소', undoItemFix);
+}
+function undoItemFix(){
+  const fx = lastItemFix;
+  if (!fx) return;
+  const y = state.years[fx.year];
+  if (!y) return;
+  const map = new Map(fx.rows.map(x => [x.id, x]));
+  fx.keys.forEach(k => {
+    const m = y.months[k];
+    if (!m) return;
+    (m.rows || []).forEach(r => {
+      const x = map.get(r.id);
+      if (x && r.item === x.after) r.item = x.before;   /* 그 사이 손댄 행은 그대로 둔다 */
+    });
+  });
+  lastItemFix = null;
+  saveState(); render();
+  showToast('건명을 되돌렸습니다.');
 }
 
 /* ---------------- 전년도 강사명 가져오기 ---------------- */
@@ -1634,6 +1771,8 @@ document.addEventListener('click', async (e) => {
   }
   if (act === 'add-row'){ addRow(); return; }
   if (act === 'add-sum'){ addSumRow(); return; }
+  if (act === 'item-fix'){ openItemFix(); return; }
+  if (act === 'item-fix-ok'){ applyItemFix(); return; }
   if (act === 'del-row'){ delRow(t.dataset.rid); return; }
   if (act === 'del-sum'){ delSumRow(t.dataset.sid); return; }
   if (act === 'demo'){ demoData(); return; }

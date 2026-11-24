@@ -3,7 +3,7 @@
    - SheetJS(xlsx.full.min.js)·아이콘·매니페스트는 캐시 우선(stale-while-revalidate).
    - 입력한 자료는 서비스 워커가 아니라 브라우저 localStorage 에만 있다.
 */
-var CACHE = 'tax-manager-v2';
+var CACHE = 'tax-manager-v3';
 var SHELL = new URL('./index.html', self.location.href).href;
 var CORE = [
   './',
